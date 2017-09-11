@@ -12,7 +12,7 @@ typedef struct list list_t;
 
 /// Change this definition and replace int with the appropriate type
 /// in your program. 
-typedef int T;
+typedef struct rack T;
 
 /// \file list.h
 ///

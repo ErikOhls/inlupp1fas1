@@ -1,18 +1,23 @@
-/// !! OBS -- du skall inte ändra i denna fil, med ETT undantag:
-/// !! du skall ändra i typedef av T så att det passar ditt program.
-
-
-#ifndef __list_h__
-#define __list_h__
-
 #include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "list.h"
 
-/// Define struct list in your .c file not here! (why?)
-typedef struct list list_t;
+struct list
+{
+  struct rack* rack;
+  struct list* next;
+};
+
+
 
 /// Change this definition and replace int with the appropriate type
-/// in your program. 
-typedef int T;
+/// in your program.
+struct rack
+{
+  char *shelf;
+  int amount;
+};
 
 /// \file list.h
 ///
@@ -27,7 +32,12 @@ typedef int T;
 /// \returns: empty list
 list_t *list_new()
 {
-
+  puts("in list new");
+  list_t *list = (list_t *)malloc(sizeof(list_t));
+  list->rack = NULL;
+  list->next = NULL;
+  puts("return list");
+  return list;
 }
 
 /// Inserts a new element at the end of the list
@@ -36,7 +46,9 @@ list_t *list_new()
 /// \param elem the element to be appended
 void list_append(list_t *list, T elem)
 {
-
+  puts("in append");
+  *list->rack = elem;
+  puts("exit append");
 }
 
 /// Inserts a new element at the beginning of the list
@@ -45,7 +57,7 @@ void list_append(list_t *list, T elem)
 /// \param elem the element to be prepended
 void list_prepend(list_t *list, T elem)
 {
-
+  
 }
 
 /// Inserts a new element at a given index. 
@@ -96,7 +108,7 @@ bool list_insert(list_t *list, int index, T elem)
 /// \returns true if succeeded, else 
 bool list_remove(list_t *list, int index, T *elem)
 {
-
+  return true;
 }
 
 /// Returns the element at a given index
@@ -105,7 +117,7 @@ bool list_remove(list_t *list, int index, T *elem)
 /// \returns a pointer to the element at index index
 T list_get(list_t *list, int index)
 {
-
+  
 }
 
 /// A convenience for list_get(list, 0)
@@ -128,7 +140,13 @@ T list_last(list_t *list)
 /// \returns the length of list
 int list_length(list_t *list)
 {
-
+  return 1;
 }
 
-#endif
+int main(void)
+{
+  list_t *list = list_new();
+  T rack = { .shelf = "A45", .amount = 1};
+  list_append(list, rack);
+  return 0;
+}
