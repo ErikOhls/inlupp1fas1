@@ -1,6 +1,6 @@
 #ifndef __tree_h__
 #define __tree_h__
-
+ 
 #include <stdbool.h>
 
 /// Define struct tree in your .c file not here! (why?)

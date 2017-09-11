@@ -1,7 +1,7 @@
 /// !! OBS -- du skall inte ändra i denna fil, med ETT undantag:
 /// !! du skall ändra i typedef av T så att det passar ditt program.
 
-
+ 
 #ifndef __list_h__
 #define __list_h__
 

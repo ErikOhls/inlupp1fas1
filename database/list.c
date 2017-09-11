@@ -10,7 +10,7 @@ struct list
 };
 
 
-
+ 
 /// Change this definition and replace int with the appropriate type
 /// in your program.
 struct rack

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "tree.h"
-
+ 
 /// Define struct tree in your .c file not here! (why?)
 typedef struct tree
 {
