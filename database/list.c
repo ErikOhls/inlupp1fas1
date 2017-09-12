@@ -5,11 +5,15 @@
 
 struct list
 {
-  struct rack* rack;
-  struct list* next;
+  struct node* first;
+  struct node* last;
 };
 
-
+struct node
+{
+  struct rack* rack;
+  struct node* next;
+};
  
 /// Change this definition and replace int with the appropriate type
 /// in your program.
