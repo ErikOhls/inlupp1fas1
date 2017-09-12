@@ -57,7 +57,11 @@ void list_append(list_t *list, T elem)
 /// \param elem the element to be prepended
 void list_prepend(list_t *list, T elem)
 {
-  
+  puts("in prepend");
+  *
+
+
+  puts("out prepend");
 }
 
 /// Inserts a new element at a given index. 
