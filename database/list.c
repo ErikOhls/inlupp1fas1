@@ -48,7 +48,7 @@ list_t *list_new()
 ///
 /// \param list pointer to the list
 /// \param elem the element to be appended
-void list_append(list_t *list, T elem)
+void list_append(list_t *list, L elem)
 {
   puts("in append");
   *list->rack = elem;
@@ -59,7 +59,7 @@ void list_append(list_t *list, T elem)
 ///
 /// \param list pointer to the list
 /// \param elem the element to be prepended
-void list_prepend(list_t *list, T elem)
+void list_prepend(list_t *list, L elem)
 {
   puts("in prepend");
   *
@@ -97,7 +97,7 @@ void list_prepend(list_t *list, T elem)
 /// \param index the index for elem to be inserted at
 /// \param elem  the element to be prepended
 /// \returns true if succeeded, else false
-bool list_insert(list_t *list, int index, T elem)
+bool list_insert(list_t *list, int index, L elem)
   {
 
 }
@@ -114,7 +114,7 @@ bool list_insert(list_t *list, int index, T elem)
 /// \param index the index to be removed
 /// \param elem a pointer to where the element can be stored
 /// \returns true if succeeded, else 
-bool list_remove(list_t *list, int index, T *elem)
+bool list_remove(list_t *list, int index, L *elem)
 {
   return true;
 }
@@ -123,19 +123,19 @@ bool list_remove(list_t *list, int index, T *elem)
 /// \param list  pointer to the list
 /// \param index the index to be returns
 /// \returns a pointer to the element at index index
-T list_get(list_t *list, int index)
+L list_get(list_t *list, int index)
 {
   
 }
 
 /// A convenience for list_get(list, 0)
-T list_first(list_t *list)
+L list_first(list_t *list)
 {
 
 }
 
 /// A convenience for list_get(list, -1)
-T list_last(list_t *list)
+L list_last(list_t *list)
 {
 
 }
@@ -154,7 +154,7 @@ int list_length(list_t *list)
 int main(void)
 {
   list_t *list = list_new();
-  T rack = { .shelf = "A45", .amount = 1};
+  L rack = { .shelf = "A45", .amount = 1};
   list_append(list, rack);
   return 0;
 }
