@@ -31,6 +31,13 @@ struct node
 /// \bug None known. 
 
 
+/// ---- TESTING -----
+void print_list(list_t* list)
+{
+  printf("First L: %s, %d\n", list->first->rack.shelf, list->first->rack.amount);
+  //printf("Last L:%s, %d\n", list->last->rack.shelf, list->last->rack.amount);
+}
+
 /// Creates a new list
 ///
 /// \returns: empty list
@@ -51,17 +58,22 @@ list_t *list_new()
 void list_append(list_t *list, L elem)
 {
   puts("in append");
-  L new_elem = { .shelf = "A34", .amount = 1 };
   if(list->first == NULL)
     {
       puts("in if NULL");
-      node_t *new_node; // = { .rack = &elem, .next = NULL};
+      node_t new_node = { .rack = elem, .next = NULL};
       puts("after new node");
-      *new_node->rack = new_elem;
-      new_node->next = NULL;
-      *list->first = *new_node;
+      list->first = &new_node;
+      list->last = &new_node;
     }
-  puts("exit append");
+  else
+    {
+      puts("in else");
+      node_t new_node = { .rack = elem, .next = NULL};
+      list->last->next = &new_node;
+      list->last = &new_node;
+    }
+    
 }
 
 /// Inserts a new element at the beginning of the list
@@ -160,8 +172,13 @@ int list_length(list_t *list)
 
 int main(void)
 {
-  //list_t *list = list_new();
-  //L rack = { .shelf = "A45", .amount = 1};
-  //list_append(list, rack);
+  list_t *list = list_new();
+  L rack = { .shelf = "A45", .amount = 1};
+  L rack2 = { .shelf = "B10", .amount = 2};
+  list_append(list, rack);
+  print_list(list);
+  puts("calling append 2nd time");
+  list_append(list, rack2);
+  print_list(list);
   return 0;
 }
