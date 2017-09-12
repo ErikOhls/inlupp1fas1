@@ -8,12 +8,6 @@ struct list
   struct node* first;
   struct node* last;
 };
-
-struct node
-{
-  struct rack* rack;
-  struct node* next;
-};
  
 /// Change this definition and replace int with the appropriate type
 /// in your program.
@@ -21,6 +15,12 @@ struct rack
 {
   char *shelf;
   int amount;
+};
+
+struct node
+{
+  L rack;
+  struct node* next;
 };
 
 /// \file list.h
@@ -38,8 +38,8 @@ list_t *list_new()
 {
   puts("in list new");
   list_t *list = (list_t *)malloc(sizeof(list_t));
-  list->rack = NULL;
-  list->next = NULL;
+  list->first = NULL;
+  list->last = NULL;
   puts("return list");
   return list;
 }
@@ -51,7 +51,16 @@ list_t *list_new()
 void list_append(list_t *list, L elem)
 {
   puts("in append");
-  *list->rack = elem;
+  L new_elem = { .shelf = "A34", .amount = 1 };
+  if(list->first == NULL)
+    {
+      puts("in if NULL");
+      node_t *new_node; // = { .rack = &elem, .next = NULL};
+      puts("after new node");
+      *new_node->rack = new_elem;
+      new_node->next = NULL;
+      *list->first = *new_node;
+    }
   puts("exit append");
 }
 
@@ -62,8 +71,6 @@ void list_append(list_t *list, L elem)
 void list_prepend(list_t *list, L elem)
 {
   puts("in prepend");
-  *
-
 
   puts("out prepend");
 }
@@ -125,7 +132,7 @@ bool list_remove(list_t *list, int index, L *elem)
 /// \returns a pointer to the element at index index
 L list_get(list_t *list, int index)
 {
-  
+
 }
 
 /// A convenience for list_get(list, 0)
@@ -153,8 +160,8 @@ int list_length(list_t *list)
 
 int main(void)
 {
-  list_t *list = list_new();
-  L rack = { .shelf = "A45", .amount = 1};
-  list_append(list, rack);
+  //list_t *list = list_new();
+  //L rack = { .shelf = "A45", .amount = 1};
+  //list_append(list, rack);
   return 0;
 }
