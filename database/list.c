@@ -211,19 +211,15 @@ L list_first(list_t *list)
 {
   L first_e;
   first_e = list->first->rack;
-
   return first_e;
-  
-    
 }
 
 /// A convenience for list_get(list, -1)
 L list_last(list_t *list)
 {
-  L last;
-  last.shelf = list->last->rack.shelf;
-  last.amount = list->last->rack.amount;
-  return last;
+  L last_e;
+  last_e = list->last->rack;
+  return last_e;
 }
 
 /// Returns the length of the list. It is undefined
