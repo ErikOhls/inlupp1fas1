@@ -32,7 +32,7 @@ struct node
 
 
 /// ---- TESTING -----
-void print_list(list_t* list)
+/*void print_list(list_t* list)
 {
   printf("First L: %s, %d\n", list->first->rack.shelf, list->first->rack.amount);
   if(list->last != NULL)
@@ -40,7 +40,23 @@ void print_list(list_t* list)
       printf("Last L:%s, %d\n", list->last->rack.shelf, list->last->rack.amount);
     }
 }
-
+*/
+void print_list(list_t* list)
+{
+  node_t *cursor = list->first;
+  if(cursor != NULL)
+    {
+      while(cursor != NULL)
+        {
+          printf("%s, %d\n", cursor->rack.shelf, cursor->rack.amount);
+          cursor = cursor->next;
+        }
+    }
+  else
+    {
+      puts("Empty list ffs!");
+    }
+}
 
 /// Creates a new list
 ///
@@ -244,8 +260,8 @@ int main(void)
   list_append(list, rack4);
   list_append(list, rack5);
   print_list(list);
-  puts("remove");
-  list_remove(list, 4, &rack5);
-  print_list(list);
+  //puts("remove");
+  //list_remove(list, 4, &rack5);
+  //print_list(list);
   return 0;
 }
