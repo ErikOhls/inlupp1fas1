@@ -212,10 +212,17 @@ bool list_remove(list_t *list, int index, L *elem)
 /// \returns a pointer to the element at index index
 L list_get(list_t *list, int index)
 {
-  int i=0;
+  int i = 0;
   node_t *pointer = list->first;
+  printf("start index: %d\n", index);
+  if (index < 0)
+    {
+      index = list_length(list) + index; // VARFÖR ÄR DET INTE +1??!! 
+    }
+  printf("pre while index :  %d\n", index);
   while (i != index)
     {
+      printf("%d\n" , i  );
     pointer = pointer->next;
     i++;
   }
@@ -274,6 +281,6 @@ int main(void)
   //list_remove(list, 4, &rack5);
   //print_list(list);
   printf("List length = %d\n", list_length(list));
-  print_rack(list_get(list, 4));
+  print_rack(list_get(list, -1));
   return 0;
 }
