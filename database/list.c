@@ -228,7 +228,10 @@ L list_first(list_t *list)
 /// A convenience for list_get(list, -1)
 L list_last(list_t *list)
 {
-
+  L last;
+  last.shelf = list->last->rack.shelf;
+  last.amount = list->last->rack.amount;
+  return last;
 }
 
 /// Returns the length of the list. It is undefined
@@ -239,7 +242,14 @@ L list_last(list_t *list)
 /// \returns the length of list
 int list_length(list_t *list)
 {
-  return 1;
+  int i = 0;
+  node_t *cursor = list->first;
+  while(cursor != NULL)
+    {
+      i++;
+      cursor = cursor->next;
+    }
+  return i;
 }
 
 int main(void)
@@ -259,5 +269,6 @@ int main(void)
   //puts("remove");
   //list_remove(list, 4, &rack5);
   //print_list(list);
+  printf("List length = %d\n", list_length(list));
   return 0;
 }
