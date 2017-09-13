@@ -203,7 +203,15 @@ bool list_remove(list_t *list, int index, L *elem)
 /// \returns a pointer to the element at index index
 L list_get(list_t *list, int index)
 {
+  int i=0;
+  node_t *pointer = list->first;
+  while (i != index) {
 
+    pointer = pointer->next;
+    i++;
+    
+  }
+  return pointer->rack;
 }
 
 /// A convenience for list_get(list, 0)
