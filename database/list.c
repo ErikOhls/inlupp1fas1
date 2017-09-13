@@ -32,15 +32,6 @@ struct node
 
 
 /// ---- TESTING -----
-/*void print_list(list_t* list)
-{
-  printf("First L: %s, %d\n", list->first->rack.shelf, list->first->rack.amount);
-  if(list->last != NULL)
-    {
-      printf("Last L:%s, %d\n", list->last->rack.shelf, list->last->rack.amount);
-    }
-}
-*/
 void print_list(list_t* list)
 {
   node_t *cursor = list->first;
@@ -63,7 +54,6 @@ void print_list(list_t* list)
 /// \returns: empty list
 list_t *list_new()
 {
-  puts("in list new");
   return calloc(1, sizeof(struct list));
 }
 
@@ -83,21 +73,19 @@ node_t *node_new(L elem, node_t *next)
 void list_append(list_t *list, L elem)
 {
   // Flytta logik till list_insert?
-  puts("in append");
-  if (list->last == NULL)
+  if (list->last == NULL)  // Om sista plats ej finns
     {
-      list->last = node_new( elem, NULL);
+      list->last = node_new( elem, NULL); // Sätt in elem på sista plats
     }
   else 
     {
       list->last->next = node_new(elem, NULL); 
-      list->last = list->last->next;
+      list->last = list->last->next; // Peka om last
     }
   if(list->first == NULL)
     {
       list->first = list->last;
-    }
-  puts("out append");  
+    }  
 }
 
 /// Inserts a new element at the beginning of the list
@@ -107,16 +95,11 @@ void list_append(list_t *list, L elem)
 void list_prepend(list_t *list, L elem)
 {
   // Flytta logik till list_insert?
-  puts("in prepend");
-  
-  list->first = node_new(elem , list->first);
-  if (list->last == NULL)
+  list->first = node_new(elem , list->first); // Ny list->first/peka om
+  if (list->last == NULL) // Om list var tom
     {
-      list->last = list->first;
+      list->last = list->first; // Peka last till samma elem
     }
-
-  
-  puts("out prepend");
 }
 
 /// Inserts a new element at a given index. 
@@ -152,21 +135,21 @@ bool list_insert(list_t *list, int index, L elem)
 {
   node_t* pointer = list->first;
   int i = 0;
-  if(index == 0 || list->first == NULL)
+  if(index == 0 || list->first == NULL) // Om tom lista
     {
       list_prepend(list, elem);
       return true;
     }
   while(i < index)
     {
-      if(pointer == NULL)
+      if(pointer == NULL) // Om nått sista node och index för stort
         {
           return false;
         }
       i++;
       pointer = pointer->next;
     }
-  if(i == index && pointer == NULL)
+  if(i == index && pointer == NULL) // Om vill lägga på på sista plats
     {
       list_append(list, elem);
       return true;
