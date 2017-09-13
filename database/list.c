@@ -44,12 +44,11 @@ void print_list(list_t* list)
 list_t *list_new()
 {
   puts("in list new");
-  list_t *list = (list_t *)malloc(sizeof(list_t));
-  list->first = NULL;
-  list->last = NULL;
-  puts("return list");
-  return list;
+  return calloc(1, sizeof(struct list));
 }
+
+/// node_new
+//node_t node_new(rack
 
 /// Inserts a new element at the end of the list
 ///
