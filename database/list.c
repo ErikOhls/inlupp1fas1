@@ -205,11 +205,10 @@ L list_get(list_t *list, int index)
 {
   int i=0;
   node_t *pointer = list->first;
-  while (i != index) {
-
+  while (i != index)
+    {
     pointer = pointer->next;
     i++;
-    
   }
   return pointer->rack;
 }
@@ -240,7 +239,7 @@ int list_length(list_t *list)
 {
   int i = 0;
   node_t *cursor = list->first;
-  while(cursor != NULL)
+  while(cursor != NULL) // While end not reached
     {
       i++;
       cursor = cursor->next;
