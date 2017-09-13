@@ -49,6 +49,11 @@ void print_list(list_t* list)
     }
 }
 
+void print_rack(L elem)
+{
+  printf("shelf = %s, amount = %d\n", elem.shelf, elem.amount); 
+}
+
 /// Creates a new list
 ///
 /// \returns: empty list
@@ -134,6 +139,10 @@ void list_prepend(list_t *list, L elem)
 bool list_insert(list_t *list, int index, L elem)
 {
   node_t* pointer = list->first;
+  if(index < 0) // If index is negative
+    {
+      index = list_length(list)+1+index;
+    }
   int i = 0;
   if(index == 0 || list->first == NULL) // Om tom lista
     {
@@ -205,19 +214,37 @@ bool list_remove(list_t *list, int index, L *elem)
 /// \returns a pointer to the element at index index
 L list_get(list_t *list, int index)
 {
-
+  int i = 0;
+  node_t *pointer = list->first;
+  printf("start index: %d\n", index);
+  if (index < 0)
+    {
+      index = list_length(list) + index; // VARFÖR ÄR DET INTE +1??!! 
+    }
+  printf("pre while index :  %d\n", index);
+  while (i != index)
+    {
+      printf("%d\n" , i  );
+    pointer = pointer->next;
+    i++;
+  }
+  return pointer->rack;
 }
 
 /// A convenience for list_get(list, 0)
 L list_first(list_t *list)
 {
-
+  L first_e;
+  first_e = list->first->rack;
+  return first_e;
 }
 
 /// A convenience for list_get(list, -1)
 L list_last(list_t *list)
 {
-
+  L last_e;
+  last_e = list->last->rack;
+  return last_e;
 }
 
 /// Returns the length of the list. It is undefined
@@ -251,10 +278,18 @@ int main(void)
   list_append(list, rack2);
   list_append(list, rack3);
   list_append(list, rack4);
-  list_append(list, rack5);
+  list_insert(list, -1, rack5);
   print_list(list);
+<<<<<<< HEAD
   puts("\nremove\n");
   list_remove(list, 5, &rack5);
   print_list(list);
+=======
+  //puts("remove");
+  //list_remove(list, 4, &rack5);
+  //print_list(list);
+  printf("List length = %d\n", list_length(list));
+  print_rack(list_get(list, -1));
+>>>>>>> 19ebdd0f22c49ad4734a26fc6a1dfa8e58a44ccb
   return 0;
 }
