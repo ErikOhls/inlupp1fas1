@@ -35,8 +35,12 @@ struct node
 void print_list(list_t* list)
 {
   printf("First L: %s, %d\n", list->first->rack.shelf, list->first->rack.amount);
-  //printf("Last L:%s, %d\n", list->last->rack.shelf, list->last->rack.amount);
+  if(list->last != NULL)
+    {
+      printf("Last L:%s, %d\n", list->last->rack.shelf, list->last->rack.amount);
+    }
 }
+
 
 /// Creates a new list
 ///
@@ -48,7 +52,13 @@ list_t *list_new()
 }
 
 /// node_new
-//node_t node_new(rack
+node_t *node_new(L elem, node_t *next)
+{
+  node_t *new_node = malloc(sizeof(node_t));
+  new_node->rack = elem;
+  new_node->next = next;
+  return new_node;
+}
 
 /// Inserts a new element at the end of the list
 ///
@@ -57,22 +67,11 @@ list_t *list_new()
 void list_append(list_t *list, L elem)
 {
   puts("in append");
+  list->last = node_new(elem, NULL);
   if(list->first == NULL)
     {
-      puts("in if NULL");
-      node_t new_node = { .rack = elem, .next = NULL};
-      puts("after new node");
-      list->first = &new_node;
-      list->last = &new_node;
+      list->first = list->last;
     }
-  else
-    {
-      puts("in else");
-      node_t new_node = { .rack = elem, .next = NULL};
-      list->last->next = &new_node;
-      list->last = &new_node;
-    }
-    
 }
 
 /// Inserts a new element at the beginning of the list
