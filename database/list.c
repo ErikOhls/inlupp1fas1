@@ -67,11 +67,20 @@ node_t *node_new(L elem, node_t *next)
 void list_append(list_t *list, L elem)
 {
   puts("in append");
-  list->last = node_new(elem, NULL);
+  if (list->last == NULL)
+    {
+      list->last = node_new( elem, NULL);
+    }
+  else 
+    {
+      list->last->next = node_new(elem, NULL); 
+      list->last = list->last->next;
+    }
   if(list->first == NULL)
     {
       list->first = list->last;
     }
+  puts("out append");  
 }
 
 /// Inserts a new element at the beginning of the list
@@ -81,7 +90,14 @@ void list_append(list_t *list, L elem)
 void list_prepend(list_t *list, L elem)
 {
   puts("in prepend");
+  
+  list->first = node_new(elem , list->first);
+  if (list->last == NULL)
+    {
+      list->last = list->first;
+    }
 
+  
   puts("out prepend");
 }
 
@@ -173,10 +189,10 @@ int main(void)
   list_t *list = list_new();
   L rack = { .shelf = "A45", .amount = 1};
   L rack2 = { .shelf = "B10", .amount = 2};
-  list_append(list, rack);
+  list_prepend(list, rack);
   print_list(list);
   puts("calling append 2nd time");
-  list_append(list, rack2);
+  list_prepend(list, rack2);
   print_list(list);
   return 0;
 }
