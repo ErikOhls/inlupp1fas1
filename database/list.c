@@ -49,6 +49,11 @@ void print_list(list_t* list)
     }
 }
 
+void print_rack(L elem)
+{
+  printf("shelf = %s, amount = %d\n", elem.shelf, elem.amount); 
+}
+
 /// Creates a new list
 ///
 /// \returns: empty list
@@ -134,6 +139,10 @@ void list_prepend(list_t *list, L elem)
 bool list_insert(list_t *list, int index, L elem)
 {
   node_t* pointer = list->first;
+  if(index < 0) // If index is negative
+    {
+      index = list_length(list)+1+index;
+    }
   int i = 0;
   if(index == 0 || list->first == NULL) // Om tom lista
     {
@@ -259,11 +268,12 @@ int main(void)
   list_append(list, rack2);
   list_append(list, rack3);
   list_append(list, rack4);
-  list_append(list, rack5);
+  list_insert(list, -1, rack5);
   print_list(list);
   //puts("remove");
   //list_remove(list, 4, &rack5);
   //print_list(list);
   printf("List length = %d\n", list_length(list));
+  print_rack(list_get(list, 4));
   return 0;
 }
