@@ -66,6 +66,7 @@ node_t *node_new(L elem, node_t *next)
 /// \param elem the element to be appended
 void list_append(list_t *list, L elem)
 {
+  // Flytta logik till list_insert?
   puts("in append");
   if (list->last == NULL)
     {
@@ -89,6 +90,7 @@ void list_append(list_t *list, L elem)
 /// \param elem the element to be prepended
 void list_prepend(list_t *list, L elem)
 {
+  // Flytta logik till list_insert?
   puts("in prepend");
   
   list->first = node_new(elem , list->first);
@@ -171,7 +173,29 @@ bool list_insert(list_t *list, int index, L elem)
 /// \returns true if succeeded, else 
 bool list_remove(list_t *list, int index, L *elem)
 {
-  return true;
+  node_t *pointer = list->first;
+  int i = 0;
+  if(index == 0)
+    {
+      puts("Index == 0\n");
+      node_t *tmp = pointer->next;
+      free(list->first);
+      list->first = tmp;
+      return true;
+    }
+  while(++i < index)
+    {
+      printf("while i = %d\n", i);
+      if(i == index)
+        {
+          puts("i == index-1\n");
+          pointer = pointer->next->next;
+          free(pointer->next);
+          return true;
+        }
+      pointer->next = pointer->next->next;
+    }
+  return false;
 }
 
 /// Returns the element at a given index
@@ -214,11 +238,14 @@ int main(void)
   L rack3 = { .shelf = "C15", .amount = 4};
   L rack4 = { .shelf = "D25", .amount = 6};
   L rack5 = { .shelf = "E65", .amount = 9};
-  list_prepend(list, rack);
-  list_prepend(list, rack2);
-  list_insert(list, 1, rack4);
-  list_insert(list, 2, rack5);
-  list_insert(list, 3, rack3);
+  list_append(list, rack);
+  list_append(list, rack2);
+  list_append(list, rack3);
+  list_append(list, rack4);
+  list_append(list, rack5);
+  print_list(list);
+  puts("remove");
+  list_remove(list, 4, &rack5);
   print_list(list);
   return 0;
 }
