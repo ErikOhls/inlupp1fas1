@@ -131,8 +131,30 @@ void list_prepend(list_t *list, L elem)
 /// \param elem  the element to be prepended
 /// \returns true if succeeded, else false
 bool list_insert(list_t *list, int index, L elem)
-  {
-
+{
+  node_t* pointer = list->first;
+  int i = 0;
+  if(index == 0 || list->first == NULL)
+    {
+      list_prepend(list, elem);
+      return true;
+    }
+  while(i < index)
+    {
+      if(pointer == NULL)
+        {
+          return false;
+        }
+      i++;
+      pointer = pointer->next;
+    }
+  if(i == index && pointer == NULL)
+    {
+      list_append(list, elem);
+      return true;
+    }
+  pointer = node_new(elem, pointer->next);
+  return true;
 }
 
 /// Removes an element from a list.
@@ -189,10 +211,14 @@ int main(void)
   list_t *list = list_new();
   L rack = { .shelf = "A45", .amount = 1};
   L rack2 = { .shelf = "B10", .amount = 2};
+  L rack3 = { .shelf = "C15", .amount = 4};
+  L rack4 = { .shelf = "D25", .amount = 6};
+  L rack5 = { .shelf = "E65", .amount = 9};
   list_prepend(list, rack);
-  print_list(list);
-  puts("calling append 2nd time");
   list_prepend(list, rack2);
+  list_insert(list, 1, rack4);
+  list_insert(list, 2, rack5);
+  list_insert(list, 3, rack3);
   print_list(list);
   return 0;
 }
