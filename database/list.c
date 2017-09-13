@@ -209,7 +209,12 @@ L list_get(list_t *list, int index)
 /// A convenience for list_get(list, 0)
 L list_first(list_t *list)
 {
+  L first_e;
+  first_e = list->first->rack;
 
+  return first_e;
+  
+    
 }
 
 /// A convenience for list_get(list, -1)
