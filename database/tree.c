@@ -1,16 +1,23 @@
 #include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "tree.h"
 
 /// Define struct tree in your .c file not here! (why?)
-typedef struct tree tree_t;
+struct tree
+{
+  struct node* top;
+};
 
-/// For now, let an element's key be string 
-typedef char *K;
+typedef struct node node_t;
 
-/// Change this definition and replace int with the appropriate type
-/// in your program. Note, however, that your implementation of list.c
-/// should treat T as if it did not know the type.
-typedef int T;
+struct node
+{
+  K key;
+  T elem;
+  node_t *left;
+  node_t *right;
+};
 
 /// \file tree.h
 ///
@@ -24,9 +31,17 @@ typedef int T;
 /// \returns: empty tree
 tree_t *tree_new()
 {
-  
+  return calloc(1, sizeof(struct tree));
 }
 
+
+node_t *node_new(K key, T elem)
+{
+  node_t *new_node = calloc(1, sizeof(node_t));
+  new_node->key = key;
+  new_node->elem = elem;
+  return new_node;
+}
 /// Remove a tree along with all T elements.
 /// Note, if T is a pointer, elements will not
 /// be removed. 
@@ -93,4 +108,15 @@ T tree_get(tree_t *tree, K key)
 T tree_remove(tree_t *tree, K key)
 {
 
+}
+
+int main(void)
+{
+  tree_t *t = tree_new();
+  t->top = node_new("abc", 1);
+  t->top->right = node_new("def", 2);
+  t->top->left = node_new("ghi", 3);
+  t->top->right->right = node_new("klm", 4);
+  t->top->right->left = node_new("opq", 5);
+  return 0;
 }
