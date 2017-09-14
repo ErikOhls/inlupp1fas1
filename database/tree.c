@@ -154,9 +154,35 @@ bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 /// \param tree pointer to the tree
 /// \param key the key of elem to be removed
 /// \returns: true if key is a key in tree
+
+
+bool tree_has_key_helper(node_t *n, K key_el)
+{
+  while(n != NULL)
+    {
+      if(n->key == key_el)
+        {
+          return true;
+        }
+      else
+        {
+          return (tree_has_key_helper(n->right, key_el) || tree_has_key_helper(n->left,  key_el));       
+        }
+    }
+  return false;
+}
+
 bool tree_has_key(tree_t *tree, K key)
 {
-  return true;
+  if(tree->top == NULL)
+  {
+    return false;
+  }
+  else
+    {
+      return tree_has_key_helper(tree->top, key);
+    }
+  return false;
 }
 
 /// Returns the element for a given key in tree.
@@ -185,19 +211,30 @@ int main(void)
   tree_t *t = tree_new();
   t->top = node_new("abc", 1);
   t->top->right = node_new("def", 2);
-  t->top->left = node_new("ghi", 3);
-  t->top->left->left = node_new("ghi", 3);
-  t->top->left->left->left = node_new("ghi", 3);
-  t->top->left->left->left->left = node_new("ghi", 3);
-  t->top->left->left->left->left->left = node_new("ghi", 3);
-  t->top->right->right = node_new("klm", 4);
-  t->top->right->left = node_new("opq", 5);
- 
-
+  t->top->left = node_new("hejewq",4);
+  t->top->left->left = node_new("heja",4);
+  t->top->left->left->left = node_new("jjj",6);
+  t->top->left->left->left->right = node_new("jjj",6);
+  t->top->left->left->left->right->left = node_new("jjj",6);
+  t->top->left->left->left->right->left->right = node_new("jjj",6);
+  t->top->left->left->left->right->left->right->left = node_new("hej",6);
+  t->top->left->right= node_new("s",3);
+  t->top->left->right->left = node_new("s",3);
+  t->top->left->right->left->right = node_new("woppa",3);
+  t->top->left->right->left->right->left = node_new("s",3);
+  t->top->left->right->left->right->left->right = node_new("s",3);
+  t->top->left->right->left->right->left->right->left = node_new("snälla",6);
+  
+  
   //tree_insert(t, "xxx", 6);
   //print_specific(t);
 
-  int depth = tree_depth(t);
-  printf("%d\n",depth);
+  //int depth = tree_depth(t);
+  //printf("%d\n",depth);
+
+  bool tree_key = tree_has_key(t,"hej");
+  printf("%d\n", tree_key);
+  
+  
   return 0;
 }
