@@ -106,6 +106,12 @@ int tree_depth(tree_t *tree)
     }
 }
 
+/// Insert element into the tree. Returns false if the key is already used.
+///
+/// \param tree pointer to the tree
+/// \param key the key of element to be appended
+/// \param elem the element 
+/// \returns: true if successful, else false
 node_t *tree_insert_helper(node_t *cursor, K key, T elem, bool *success)
 {
   if(cursor == NULL)               // Om tomma noden är nådd
@@ -129,12 +135,7 @@ node_t *tree_insert_helper(node_t *cursor, K key, T elem, bool *success)
     }
   return cursor;                   // Skicka cursor bakåt i rekursiven
 }
-/// Insert element into the tree. Returns false if the key is already used.
-///
-/// \param tree pointer to the tree
-/// \param key the key of element to be appended
-/// \param elem the element 
-/// \returns: true if successful, else false
+
 bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 {
   bool *success;
@@ -154,7 +155,6 @@ bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 /// \param tree pointer to the tree
 /// \param key the key of elem to be removed
 /// \returns: true if key is a key in tree
-/// ---- Detta jobbar Erik på -----
 bool tree_has_key(tree_t *tree, K key)
 {
   return true;
@@ -162,13 +162,37 @@ bool tree_has_key(tree_t *tree, K key)
 
 /// Returns the element for a given key in tree.
 /// (The implementation may assume that the key exists.)
-/// 
+///
 /// \param tree pointer to the tree
 /// \param key the key of elem to be removed
 /// \returns: true if key is a key in tree
+
+/// Detta funkar i princip(tror jag). Är jox med pekare jag inte får styr på.
+node_t *tree_get_helper(node_t *cursor, K key, T *elem)
+{
+  if(strcmp(cursor->key, key) < 0) // Vänster
+    {
+      cursor->left = tree_get_helper(cursor->left, key, elem);
+    }
+  if(strcmp(cursor->key, key) > 0) // Höger
+    {
+      cursor->right = tree_get_helper(cursor->right, key, elem);
+    }
+  if(strcmp(cursor->key, key) == 0)// Hittad!
+    {
+      *elem = cursor->key;         // * Avreferar, varför varnar den?
+      return cursor;
+    }
+  return cursor;                   // Inte intresserad av returen. Finns bättre lösning på denna funktion?
+}
+
 T tree_get(tree_t *tree, K key)
 {
-
+  T *elem;
+  node_t *cursor = tree->top;
+  tree_get_helper(cursor, key, elem);
+  printf("elem found = %d\n", *elem);
+  return *elem;
 }
 
 /// This does not need implementation until Assignment 2
@@ -184,16 +208,19 @@ T tree_remove(tree_t *tree, K key)
 int main(void)
 {
   tree_t *t = tree_new();
-  /*
+
   t->top = node_new("DDD", 1);
   t->top->right = node_new("BBB", 2);
   t->top->left = node_new("EEE", 3);
   t->top->right->right = node_new("AAA", 4);
   t->top->right->left = node_new("CCC", 5);
 
-  tree_insert(t, "1", 6);
-  print_specific(t);
-  */
+  //tree_insert(t, "1", 6);
+  //print_specific(t);
+
+  tree_get(t, "DDD");
+
+  /*
   t->top = node_new("abc", 1);
   t->top->right = node_new("def", 2);
   t->top->left = node_new("ghi", 3);
@@ -204,11 +231,8 @@ int main(void)
   t->top->right->right = node_new("klm", 4);
   t->top->right->left = node_new("opq", 5);
 
-  //tree_insert(t, "xxx", 6);
-  //print_specific(t);
-
   int depth = tree_depth(t);
   printf("%d\n",depth);
-
+  */
   return 0;
 }
