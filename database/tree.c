@@ -46,7 +46,7 @@ node_t *node_new(K key, T elem)
 
 void print_specific(tree_t *tree)
 {
-  printf("%s", tree->top->right->key);
+  //printf("%s\n", tree->top->right->right->right->key);
 }
 /// Remove a tree along with all T elements.
 /// Note, if T is a pointer, elements will not
@@ -61,6 +61,7 @@ void tree_delete(tree_t *tree)
 /// Get the size of the tree 
 ///
 /// \returns: the number of nodes in the tree
+/// ------ Detta fixar grim -------
 int tree_size(tree_t *tree)
 {
   return 0;
@@ -69,37 +70,34 @@ int tree_size(tree_t *tree)
 /// Get the depth of the tree 
 ///
 /// \returns: the depth of the deepest subtree
+/// ----- Detta har Jonathan fixat -----
 int tree_depth(tree_t *tree)
 {
   return 0;
 }
 
-node_t *tree_insert_helper(node_t *cursor, K key, T elem)
+node_t *tree_insert_helper(node_t *cursor, K key, T elem, bool *success)
 {
-  puts("top of helper\n");
-  if(cursor == NULL)
+  if(cursor == NULL)               // Om tomma noden är nådd
     {
-      puts("reached null\n");
       cursor = node_new(key, elem);
+      success = true;              // Varför varning här? Borde va &?
       return cursor;
     }
-  if(strcmp(key, cursor->key) < 0)
+  if(strcmp(cursor->key, key) < 0) // Vänster
     {
-      puts("in left\n");
-      cursor->left = tree_insert_helper(cursor->left, key, elem);
+      cursor->left = tree_insert_helper(cursor->left, key, elem, success);
     }
-  if(strcmp(key, cursor->key) > 0)
+  if(strcmp(cursor->key, key) > 0) // Höger
     {
-      puts("in right\n");
-      cursor->right = tree_insert_helper(cursor->right, key, elem);
+      cursor->right = tree_insert_helper(cursor->right, key, elem, success);
     }
-  if(strcmp(key, cursor->key) == 0)
+  if(strcmp(cursor->key, key) == 0)// Finns
     {
-      puts("in equal\n");
-      return node_new(key, elem);
+      success = false;
+      return cursor;
     }
-  puts("reached (supposedly) impossible state\n");
-  return node_new(key, elem);
+  return cursor;                   // Skicka cursor bakåt i rekursiven
 }
 /// Insert element into the tree. Returns false if the key is already used.
 ///
@@ -109,10 +107,15 @@ node_t *tree_insert_helper(node_t *cursor, K key, T elem)
 /// \returns: true if successful, else false
 bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 {
-  bool success = false;
+  bool *success;
+  success = false;
   node_t *cursor = tree->top;
   puts("calling insert_helper\n");
-  tree_insert_helper(cursor, key, elem);
+  tree_insert_helper(cursor, key, elem, success);
+  if(&success)
+    {
+      puts("success == true\n");
+    }
   return success;
 }
 
@@ -121,6 +124,7 @@ bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 /// \param tree pointer to the tree
 /// \param key the key of elem to be removed
 /// \returns: true if key is a key in tree
+/// ---- Detta jobbar Erik på -----
 bool tree_has_key(tree_t *tree, K key)
 {
   return true;
@@ -150,13 +154,13 @@ T tree_remove(tree_t *tree, K key)
 int main(void)
 {
   tree_t *t = tree_new();
-  t->top = node_new("abc", 1);
-  t->top->right = node_new("def", 2);
-  t->top->left = node_new("ghi", 3);
-  t->top->right->right = node_new("klm", 4);
-  t->top->right->left = node_new("opq", 5);
+  t->top = node_new("DDD", 1);
+  t->top->right = node_new("BBB", 2);
+  t->top->left = node_new("EEE", 3);
+  t->top->right->right = node_new("AAA", 4);
+  t->top->right->left = node_new("CCC", 5);
 
-  tree_insert(t, "xxx", 6);
+  tree_insert(t, "1", 6);
   print_specific(t);
   
   return 0;
