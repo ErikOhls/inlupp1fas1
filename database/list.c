@@ -183,25 +183,30 @@ bool list_remove(list_t *list, int index, L *elem)
 {
   node_t *pointer = list->first;
   int i = 0;
+  
+  if(index >= list_length(list))     // Denna måste ligga här innan vi går in i while-loopen tror jag
+    {
+      return false;
+    }
   if(index == 0)
     {
-      puts("Index == 0\n");
       node_t *tmp = pointer->next;
-      free(list->first);
+      free(list->first);             // Enligt min körning med valgrind läcker vi fortfarande minne.
+      //free(elem);                  // Kompilerar men fuckar upp saker rejält.      
       list->first = tmp;
       return true;
     }
-  while(++i < index)
+  while(i++ < index)
     {
-      printf("while i = %d\n", i);
-      if(i == index)
+      if (i == index)
         {
-          puts("i == index-1\n");
-          pointer = pointer->next->next;
-          free(pointer->next);
+          node_t *tmp = pointer->next;
+          free(pointer->next);      // Enligt min körning med valgrind läcker vi fortfarande minne.
+          //free(elem);             //  Kompilerar men fuckar upp saker rejält  
+          pointer->next = tmp->next;
           return true;
         }
-      pointer->next = pointer->next->next;
+      pointer = pointer->next;
     }
   return false;
 }
@@ -263,6 +268,7 @@ int list_length(list_t *list)
   return i;
 }
 
+
 int main(void)
 {
   list_t *list = list_new();
@@ -277,9 +283,9 @@ int main(void)
   list_append(list, rack4);
   list_insert(list, -1, rack5);
   print_list(list);
-  //puts("remove");
-  //list_remove(list, 4, &rack5);
-  //print_list(list);
+  puts("\nremove\n");
+  list_remove(list, 4, &rack4);
+  print_list(list);
   printf("List length = %d\n", list_length(list));
   print_rack(list_get(list, -1));
   return 0;
