@@ -70,10 +70,40 @@ int tree_size(tree_t *tree)
 /// Get the depth of the tree 
 ///
 /// \returns: the depth of the deepest subtree
-/// ----- Detta har Jonathan fixat -----
+// Tror denna fungerar nu. Returnerar värdet på längsta sub tree inkl toppnoden.
+int tree_depth_helper(node_t *n)
+{
+  int node_l, node_r;
+  if(n == NULL)
+    {
+      return 0;
+    }
+  else
+    {
+      node_l = tree_depth_helper(n->left)+1;
+      node_r = tree_depth_helper(n->right)+1;
+    }
+  if(node_l > node_r)
+    {
+      return node_l;
+    }
+  else
+    {
+      return node_r;
+    }
+}
+
 int tree_depth(tree_t *tree)
 {
-  return 0;
+  if(tree->top == NULL)
+    {
+      puts("Tree top  = NULL");
+      return 0;
+    }
+  else
+    {
+      return tree_depth_helper(tree->top);
+    }
 }
 
 node_t *tree_insert_helper(node_t *cursor, K key, T elem, bool *success)
@@ -154,6 +184,7 @@ T tree_remove(tree_t *tree, K key)
 int main(void)
 {
   tree_t *t = tree_new();
+  /*
   t->top = node_new("DDD", 1);
   t->top->right = node_new("BBB", 2);
   t->top->left = node_new("EEE", 3);
@@ -162,6 +193,22 @@ int main(void)
 
   tree_insert(t, "1", 6);
   print_specific(t);
-  
+  */
+  t->top = node_new("abc", 1);
+  t->top->right = node_new("def", 2);
+  t->top->left = node_new("ghi", 3);
+  t->top->left->left = node_new("ghi", 3);
+  t->top->left->left->left = node_new("ghi", 3);
+  t->top->left->left->left->left = node_new("ghi", 3);
+  t->top->left->left->left->left->left = node_new("ghi", 3);
+  t->top->right->right = node_new("klm", 4);
+  t->top->right->left = node_new("opq", 5);
+
+  //tree_insert(t, "xxx", 6);
+  //print_specific(t);
+
+  int depth = tree_depth(t);
+  printf("%d\n",depth);
+
   return 0;
 }
