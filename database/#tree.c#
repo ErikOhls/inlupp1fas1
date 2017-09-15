@@ -46,7 +46,7 @@ node_t *node_new(K key, T elem)
 
 void print_specific(tree_t *tree)
 {
-  //printf("%s\n", tree->top->right->right->right->key);
+  printf("%s", tree->top->right->key);
 }
 /// Remove a tree along with all T elements.
 /// Note, if T is a pointer, elements will not
@@ -61,53 +61,17 @@ void tree_delete(tree_t *tree)
 /// Get the size of the tree 
 ///
 /// \returns: the number of nodes in the tree
-<<<<<<< HEAD
-
-
-int help_recurs_node(node_t *cursor)
-{
-  int size = 0;
-
-  if (cursor == NULL)
-    {
-      return size;
-    }
-
-  if (cursor != NULL)
-    {
-      if (cursor->right != NULL)
-        {
-          size += help_recurs_node(cursor->right);
-            
-        }
-      if (cursor->left != NULL)
-        {
-          size += help_recurs_node(cursor->left);
-        }
-      
-       
-    }
-
-  return size +1;
-  
-}
-
-
-
-=======
-/// ------ Detta fixar grim -------
->>>>>>> c01ab5834300479601065ce2932093a2966adc82
 int tree_size(tree_t *tree)
 {
-  return help_recurs_node(tree->top);
+  return 0;
 }
-    
-
 
 /// Get the depth of the tree 
 ///
 /// \returns: the depth of the deepest subtree
+
 // Tror denna fungerar nu. Returnerar värdet på längsta sub tree inkl toppnoden.
+
 int tree_depth_helper(node_t *n)
 {
   int node_l, node_r;
@@ -143,54 +107,46 @@ int tree_depth(tree_t *tree)
     }
 }
 
+node_t *tree_insert_helper(node_t *cursor, K key, T elem)
+{
+  puts("top of helper\n");
+  if(cursor == NULL)
+    {
+      puts("reached null\n");
+      cursor = node_new(key, elem);
+      return cursor;
+    }
+  if(strcmp(key, cursor->key) < 0)
+    {
+      puts("in left\n");
+      cursor->left = tree_insert_helper(cursor->left, key, elem);
+    }
+  if(strcmp(key, cursor->key) > 0)
+    {
+      puts("in right\n");
+      cursor->right = tree_insert_helper(cursor->right, key, elem);
+    }
+  if(strcmp(key, cursor->key) == 0)
+    {
+      puts("in equal\n");
+      return node_new(key, elem);
+    }
+  puts("reached (supposedly) impossible state\n");
+  return node_new(key, elem);
+}
 /// Insert element into the tree. Returns false if the key is already used.
 ///
 /// \param tree pointer to the tree
 /// \param key the key of element to be appended
 /// \param elem the element 
 /// \returns: true if successful, else false
-node_t *tree_insert_helper(node_t *cursor, K key, T elem, bool *success)
-{
-  if(cursor == NULL)               // Om tomma noden är nådd
-    {
-      cursor = node_new(key, elem);
-      success = true;              // Varför varning här? Borde va &?
-      return cursor;
-    }
-  if(strcmp(cursor->key, key) < 0) // Vänster
-    {
-      cursor->left = tree_insert_helper(cursor->left, key, elem, success);
-    }
-  if(strcmp(cursor->key, key) > 0) // Höger
-    {
-      cursor->right = tree_insert_helper(cursor->right, key, elem, success);
-    }
-  if(strcmp(cursor->key, key) == 0)// Finns
-    {
-      success = false;
-      return cursor;
-    }
-  return cursor;                   // Skicka cursor bakåt i rekursiven
-}
-
 bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 {
-<<<<<<< HEAD
-tree_t tree = 
-  
-  return true;
-=======
-  bool *success;
-  success = false;
+  bool success = false;
   node_t *cursor = tree->top;
   puts("calling insert_helper\n");
-  tree_insert_helper(cursor, key, elem, success);
-  if(&success)
-    {
-      puts("success == true\n");
-    }
+  tree_insert_helper(cursor, key, elem);
   return success;
->>>>>>> c01ab5834300479601065ce2932093a2966adc82
 }
 
 /// Checks whether a key is used in a tree
@@ -231,39 +187,14 @@ bool tree_has_key(tree_t *tree, K key)
 
 /// Returns the element for a given key in tree.
 /// (The implementation may assume that the key exists.)
-///
+/// 
 /// \param tree pointer to the tree
 /// \param key the key of elem to be removed
 /// \returns: true if key is a key in tree
-
-/// Detta funkar i princip(tror jag). Är jox med pekare jag inte får styr på.
-node_t *tree_get_helper(node_t *cursor, K key, T *elem)
-{
-  if(strcmp(cursor->key, key) < 0) // Vänster
-    {
-      cursor->left = tree_get_helper(cursor->left, key, elem);
-    }
-  if(strcmp(cursor->key, key) > 0) // Höger
-    {
-      cursor->right = tree_get_helper(cursor->right, key, elem);
-    }
-  if(strcmp(cursor->key, key) == 0)// Hittad!
-    {
-      *elem = cursor->key;         // * Avreferar, varför varnar den?
-      return cursor;
-    }
-  return cursor;                   // Inte intresserad av returen. Finns bättre lösning på denna funktion?
-}
-
 T tree_get(tree_t *tree, K key)
 {
-  T *elem;
-  node_t *cursor = tree->top;
-  tree_get_helper(cursor, key, elem);
-  printf("elem found = %d\n", *elem);
-  return *elem;
-}
 
+}
 
 /// This does not need implementation until Assignment 2
 ///
@@ -278,19 +209,8 @@ T tree_remove(tree_t *tree, K key)
 int main(void)
 {
   tree_t *t = tree_new();
-
-  //tree_get(t, "DDD");
-
   t->top = node_new("abc", 1);
   t->top->right = node_new("def", 2);
-<<<<<<< HEAD
-  t->top->left = node_new("ghi", 3);
-  t->top->right->right = node_new("klm", 4);
-  t->top->right->left = node_new("opq", 5);
-
-  int size = tree_size(t);
-  printf("antalet noder är = %d\n", size);
-=======
   t->top->left = node_new("hejewq",4);
   t->top->left->left = node_new("heja",4);
   t->top->left->left->left = node_new("jjj",6);
@@ -312,12 +232,9 @@ int main(void)
   //int depth = tree_depth(t);
   //printf("%d\n",depth);
 
-  bool tree_key = tree_has_key(t,"snälla");
-  printf("%d\n", tree_key);
+  //bool tree_key = tree_has_key(t,"hej");
+  //printf("%d\n", tree_key);
   
   
-  int depth = tree_depth(t);
-  printf("%d\n",depth);
->>>>>>> c01ab5834300479601065ce2932093a2966adc82
   return 0;
 }
