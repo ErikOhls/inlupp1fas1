@@ -61,8 +61,8 @@ void tree_delete(tree_t *tree)
 /// Get the size of the tree 
 ///
 /// \returns: the number of nodes in the tree
-<<<<<<< HEAD
 
+/// ------ Detta fixar grim -------
 
 int help_recurs_node(node_t *cursor)
 {
@@ -93,16 +93,10 @@ int help_recurs_node(node_t *cursor)
 }
 
 
-
-=======
-/// ------ Detta fixar grim -------
->>>>>>> c01ab5834300479601065ce2932093a2966adc82
 int tree_size(tree_t *tree)
 {
   return help_recurs_node(tree->top);
 }
-    
-
 
 /// Get the depth of the tree 
 ///
@@ -175,11 +169,6 @@ node_t *tree_insert_helper(node_t *cursor, K key, T elem, bool *success)
 
 bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 {
-<<<<<<< HEAD
-tree_t tree = 
-  
-  return true;
-=======
   bool *success;
   success = false;
   node_t *cursor = tree->top;
@@ -190,7 +179,7 @@ tree_t tree =
       puts("success == true\n");
     }
   return success;
->>>>>>> c01ab5834300479601065ce2932093a2966adc82
+
 }
 
 /// Checks whether a key is used in a tree
@@ -283,14 +272,13 @@ int main(void)
 
   t->top = node_new("abc", 1);
   t->top->right = node_new("def", 2);
-<<<<<<< HEAD
   t->top->left = node_new("ghi", 3);
   t->top->right->right = node_new("klm", 4);
   t->top->right->left = node_new("opq", 5);
 
   int size = tree_size(t);
-  printf("antalet noder är = %d\n", size);
-=======
+  printf("antalet noddjup är = %d\n", size);
+  /*
   t->top->left = node_new("hejewq",4);
   t->top->left->left = node_new("heja",4);
   t->top->left->left->left = node_new("jjj",6);
@@ -304,7 +292,7 @@ int main(void)
   t->top->left->right->left->right->left = node_new("s",3);
   t->top->left->right->left->right->left->right = node_new("s",3);
   t->top->left->right->left->right->left->right->left = node_new("snälla",6);
-  
+  */
   
   //tree_insert(t, "xxx", 6);
   //print_specific(t);
@@ -318,6 +306,8 @@ int main(void)
   
   int depth = tree_depth(t);
   printf("%d\n",depth);
->>>>>>> c01ab5834300479601065ce2932093a2966adc82
+
+  printf("antalet noder %d\n",tree_size(t) );
+
   return 0;
 }
