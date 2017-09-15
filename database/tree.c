@@ -55,10 +55,44 @@ void tree_delete(tree_t *tree)
 /// Get the size of the tree 
 ///
 /// \returns: the number of nodes in the tree
+
+
+int help_recurs_node(node_t *cursor)
+{
+  int size = 0;
+
+  if (cursor == NULL)
+    {
+      return size;
+    }
+
+  if (cursor != NULL)
+    {
+      if (cursor->right != NULL)
+        {
+          size += help_recurs_node(cursor->right);
+            
+        }
+      if (cursor->left != NULL)
+        {
+          size += help_recurs_node(cursor->left);
+        }
+      
+       
+    }
+
+  return size +1;
+  
+}
+
+
+
 int tree_size(tree_t *tree)
 {
-  return 0;
+  return help_recurs_node(tree->top);
 }
+    
+
 
 /// Get the depth of the tree 
 ///
@@ -76,6 +110,8 @@ int tree_depth(tree_t *tree)
 /// \returns: true if successful, else false
 bool tree_insert(tree_t *tree, K key, T elem)
 {
+tree_t tree = 
+  
   return true;
 }
 
@@ -118,5 +154,8 @@ int main(void)
   t->top->left = node_new("ghi", 3);
   t->top->right->right = node_new("klm", 4);
   t->top->right->left = node_new("opq", 5);
+
+  int size = tree_size(t);
+  printf("antalet noder är = %d\n", size);
   return 0;
 }
