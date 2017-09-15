@@ -68,28 +68,22 @@ int help_recurs_node(node_t *cursor)
 {
   int size = 0;
 
-  if (cursor == NULL)
+  if (cursor == NULL)              // Tomt träd
     {
       return size;
     }
-
-  if (cursor != NULL)
+  if (cursor != NULL)              // Om ej tomt träd
     {
-      if (cursor->right != NULL)
+      if (cursor->right != NULL)   // Höger
         {
           size += help_recurs_node(cursor->right);
-            
         }
-      if (cursor->left != NULL)
+      if (cursor->left != NULL)    // Vänster
         {
           size += help_recurs_node(cursor->left);
-        }
-      
-       
+        } 
     }
-
   return size +1;
-  
 }
 
 
@@ -105,7 +99,7 @@ int tree_size(tree_t *tree)
 int tree_depth_helper(node_t *n)
 {
   int node_l, node_r;
-  if(n == NULL)
+  if(n == NULL)                                 // Tomt träd
     {
       return 0;
     }
@@ -114,11 +108,11 @@ int tree_depth_helper(node_t *n)
       node_l = tree_depth_helper(n->left)+1;
       node_r = tree_depth_helper(n->right)+1;
     }
-  if(node_l > node_r)
+  if(node_l > node_r)                           // Om vänster djupare
     {
       return node_l;
     }
-  else
+  else                                          // Om höger djupare
     {
       return node_r;
     }
@@ -179,7 +173,6 @@ bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
       puts("success == true\n");
     }
   return success;
-
 }
 
 /// Checks whether a key is used in a tree
@@ -199,7 +192,7 @@ bool tree_has_key_helper(node_t *n, K key_el)
         }
       else
         {
-          return (tree_has_key_helper(n->right, key_el) || tree_has_key_helper(n->left,  key_el));       
+          return (tree_has_key_helper(n->right, key_el) || tree_has_key_helper(n->left,  key_el));  // Or? Hur vet vilken sida?
         }
     }
   return false;
@@ -252,7 +245,6 @@ T tree_get(tree_t *tree, K key)
   printf("elem found = %d\n", *elem);
   return *elem;
 }
-
 
 /// This does not need implementation until Assignment 2
 ///
