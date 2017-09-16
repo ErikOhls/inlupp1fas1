@@ -20,6 +20,10 @@ struct node
   node_t *right;
 };
 
+struct success
+{
+  bool value;
+};
 /// \file tree.h
 ///
 /// \author Tobias Wrigstad
@@ -89,7 +93,7 @@ int tree_size(tree_t *tree)
   return tree_size_helper(tree->top);
 }
 
-/// Get the depth of the tree 
+/// Get the depth of the tree
 ///
 /// \returns: the depth of the deepest subtree
 // Tror denna fungerar nu. Returnerar värdet på längsta sub tree inkl toppnoden.
@@ -136,37 +140,49 @@ int tree_depth(tree_t *tree)
 /// \returns: true if successful, else false
 
 /// Funkar bara om man manuelt lägger in första noden. Varför??
-node_t *tree_insert_helper(node_t *cursor, K key, T elem)
+node_t *tree_insert_helper(node_t *cursor, K key, T elem, struct success *success)
 {
   if(cursor == NULL)               // Om tomma noden är nådd
     {
       //puts("hit");
       cursor = node_new(key, elem);
+      success->value = true;
       return cursor;
     }
   if(strcmp(cursor->key, key) < 0) // Vänster
     {
       //puts("left");
-      cursor->left = tree_insert_helper(cursor->left, key, elem);
+      cursor->left = tree_insert_helper(cursor->left, key, elem, success);
     }
   if(strcmp(cursor->key, key) > 0) // Höger
     {
       //puts("right");
-      cursor->right = tree_insert_helper(cursor->right, key, elem);
+      cursor->right = tree_insert_helper(cursor->right, key, elem, success);
     }
   if(strcmp(cursor->key, key) == 0)// Finns
     {
       //puts("exist");
       return cursor;
+      success->value = false;
     }
   return cursor;                   // Skicka cursor bakåt i rekursiven
 }
 
 bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 {
-  puts("calling insert_helper\n");
-  tree_insert_helper(tree->top, key, elem);
-  return true;
+  struct success* success= calloc(1, sizeof(struct success));    // Varför måste man göra struct här men inte på tree_get?
+  success->value = false;
+  tree_insert_helper(tree->top, key, elem, success);
+  if(success->value)
+    {
+      free(success);              // Funkar detta? success har fortfarande en adress
+      return true;
+    }
+  else
+    {
+      free(success);
+      return false;
+    }
 }
 
 /// Checks whether a key is used in a tree
@@ -215,18 +231,14 @@ node_t *tree_get_helper(node_t *cursor, K key, T *elem)
 {
   if(strcmp(cursor->key, key) < 0) // Vänster
     {
-      puts("left");
       cursor->left = tree_get_helper(cursor->left, key, elem);
     }
   if(strcmp(cursor->key, key) > 0) // Höger
     {
-      puts("right");
       cursor->right = tree_get_helper(cursor->right, key, elem);
     }
   if(strcmp(cursor->key, key) == 0)// Hittad!
     {
-      puts("hit");
-      printf("element found = %d, @ key: %s", cursor->elem, cursor->key);
       *elem = cursor->elem;
       return cursor;
     }
@@ -235,10 +247,12 @@ node_t *tree_get_helper(node_t *cursor, K key, T *elem)
 
 T tree_get(tree_t *tree, K key)
 {
-  T *elem = 0;
+  T *elem = calloc(1, sizeof(T));  // Måste göra calloc, annars segfault i return i helper. Bättre sätt?
   tree_get_helper(tree->top, key, elem);
   printf("elem found = %d\n", *elem);
-  return *elem;
+  T tmp = *elem;
+  free(elem);
+  return tmp;
 }
 
 /// This does not need implementation until Assignment 2
@@ -254,17 +268,19 @@ T tree_remove(tree_t *tree, K key)
 int main(void)
 {
   tree_t *t = tree_new();
-  t->top = node_new("A", 3);
-  printf("%d", t->top->elem);
+
+
+  t->top = node_new("A", 3);  // Måste manuelt göra första noden för tillfället.
+  puts("insert");
   tree_insert(t, "E", 1);
-  tree_insert(t, "C", 1);
-  tree_insert(t, "O", 1);
-  tree_insert(t, "R", 1);
-  tree_insert(t, "X", 1);
-  tree_insert(t, "a", 1);
-  tree_insert(t, "B", 1);
-  tree_insert(t, "b", 1);
-  tree_get(t, "A");
+  tree_insert(t, "C", 2);
+  tree_insert(t, "O", 4);
+  tree_insert(t, "R", 5);
+  tree_insert(t, "X", 6);
+  tree_insert(t, "a", 7);
+  tree_insert(t, "B", 8);
+  tree_insert(t, "b", 9);
+  tree_get(t, "b");
 
   //printf("%s\n", t->top->key);
 
