@@ -61,10 +61,7 @@ void tree_delete(tree_t *tree)
 /// Get the size of the tree 
 ///
 /// \returns: the number of nodes in the tree
-
-/// ------ Detta fixar grim -------
-
-int help_recurs_node(node_t *cursor)
+int tree_size_helper(node_t *cursor)
 {
   int size = 0;
 
@@ -76,11 +73,11 @@ int help_recurs_node(node_t *cursor)
     {
       if (cursor->right != NULL)   // Höger
         {
-          size += help_recurs_node(cursor->right);
+          size += tree_size_helper(cursor->right);
         }
       if (cursor->left != NULL)    // Vänster
         {
-          size += help_recurs_node(cursor->left);
+          size += tree_size_helper(cursor->left);
         } 
     }
   return size +1;
@@ -89,7 +86,7 @@ int help_recurs_node(node_t *cursor)
 
 int tree_size(tree_t *tree)
 {
-  return help_recurs_node(tree->top);
+  return tree_size_helper(tree->top);
 }
 
 /// Get the depth of the tree 
@@ -137,25 +134,29 @@ int tree_depth(tree_t *tree)
 /// \param key the key of element to be appended
 /// \param elem the element 
 /// \returns: true if successful, else false
-node_t *tree_insert_helper(node_t *cursor, K key, T elem, bool *success)
+
+/// Funkar bara om man manuelt lägger in första noden. Varför??
+node_t *tree_insert_helper(node_t *cursor, K key, T elem)
 {
   if(cursor == NULL)               // Om tomma noden är nådd
     {
+      //puts("hit");
       cursor = node_new(key, elem);
-      success = true;              // Varför varning här? Borde va &?
       return cursor;
     }
   if(strcmp(cursor->key, key) < 0) // Vänster
     {
-      cursor->left = tree_insert_helper(cursor->left, key, elem, success);
+      //puts("left");
+      cursor->left = tree_insert_helper(cursor->left, key, elem);
     }
   if(strcmp(cursor->key, key) > 0) // Höger
     {
-      cursor->right = tree_insert_helper(cursor->right, key, elem, success);
+      //puts("right");
+      cursor->right = tree_insert_helper(cursor->right, key, elem);
     }
   if(strcmp(cursor->key, key) == 0)// Finns
     {
-      success = false;
+      //puts("exist");
       return cursor;
     }
   return cursor;                   // Skicka cursor bakåt i rekursiven
@@ -163,16 +164,9 @@ node_t *tree_insert_helper(node_t *cursor, K key, T elem, bool *success)
 
 bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 {
-  bool *success;
-  success = false;
-  node_t *cursor = tree->top;
   puts("calling insert_helper\n");
-  tree_insert_helper(cursor, key, elem, success);
-  if(&success)
-    {
-      puts("success == true\n");
-    }
-  return success;
+  tree_insert_helper(tree->top, key, elem);
+  return true;
 }
 
 /// Checks whether a key is used in a tree
@@ -180,8 +174,6 @@ bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 /// \param tree pointer to the tree
 /// \param key the key of elem to be removed
 /// \returns: true if key is a key in tree
-
-
 bool tree_has_key_helper(node_t *n, K key_el)
 {
   while(n != NULL)
@@ -223,15 +215,19 @@ node_t *tree_get_helper(node_t *cursor, K key, T *elem)
 {
   if(strcmp(cursor->key, key) < 0) // Vänster
     {
+      puts("left");
       cursor->left = tree_get_helper(cursor->left, key, elem);
     }
   if(strcmp(cursor->key, key) > 0) // Höger
     {
+      puts("right");
       cursor->right = tree_get_helper(cursor->right, key, elem);
     }
   if(strcmp(cursor->key, key) == 0)// Hittad!
     {
-      *elem = cursor->key;         // * Avreferar, varför varnar den?
+      puts("hit");
+      printf("element found = %d, @ key: %s", cursor->elem, cursor->key);
+      *elem = cursor->elem;
       return cursor;
     }
   return cursor;                   // Inte intresserad av returen. Finns bättre lösning på denna funktion?
@@ -239,9 +235,8 @@ node_t *tree_get_helper(node_t *cursor, K key, T *elem)
 
 T tree_get(tree_t *tree, K key)
 {
-  T *elem;
-  node_t *cursor = tree->top;
-  tree_get_helper(cursor, key, elem);
+  T *elem = 0;
+  tree_get_helper(tree->top, key, elem);
   printf("elem found = %d\n", *elem);
   return *elem;
 }
@@ -259,18 +254,21 @@ T tree_remove(tree_t *tree, K key)
 int main(void)
 {
   tree_t *t = tree_new();
+  t->top = node_new("A", 3);
+  printf("%d", t->top->elem);
+  tree_insert(t, "E", 1);
+  tree_insert(t, "C", 1);
+  tree_insert(t, "O", 1);
+  tree_insert(t, "R", 1);
+  tree_insert(t, "X", 1);
+  tree_insert(t, "a", 1);
+  tree_insert(t, "B", 1);
+  tree_insert(t, "b", 1);
+  tree_get(t, "A");
 
-  //tree_get(t, "DDD");
+  //printf("%s\n", t->top->key);
 
-  t->top = node_new("abc", 1);
-  t->top->right = node_new("def", 2);
-  t->top->left = node_new("ghi", 3);
-  t->top->right->right = node_new("klm", 4);
-  t->top->right->left = node_new("opq", 5);
-
-  int size = tree_size(t);
-  printf("antalet noddjup är = %d\n", size);
-  /*
+ /*
   t->top->left = node_new("hejewq",4);
   t->top->left->left = node_new("heja",4);
   t->top->left->left->left = node_new("jjj",6);
@@ -284,8 +282,7 @@ int main(void)
   t->top->left->right->left->right->left = node_new("s",3);
   t->top->left->right->left->right->left->right = node_new("s",3);
   t->top->left->right->left->right->left->right->left = node_new("snälla",6);
-  */
-  
+
   //tree_insert(t, "xxx", 6);
   //print_specific(t);
 
@@ -294,12 +291,11 @@ int main(void)
 
   bool tree_key = tree_has_key(t,"snälla");
   printf("%d\n", tree_key);
-  
-  
+
   int depth = tree_depth(t);
   printf("%d\n",depth);
 
   printf("antalet noder %d\n",tree_size(t) );
-
+  */
   return 0;
 }

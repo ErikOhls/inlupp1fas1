@@ -138,7 +138,7 @@ void list_prepend(list_t *list, L elem)
 /// \returns true if succeeded, else false
 bool list_insert(list_t *list, int index, L elem)
 {
-  node_t* pointer = list->first;
+  node_t* cursor = list->first;
   if(index < 0) // If index is negative
     {
       index = list_length(list)+1+index;
@@ -151,19 +151,19 @@ bool list_insert(list_t *list, int index, L elem)
     }
   while(i < index)
     {
-      if(pointer == NULL) // Om nått sista node och index för stort
+      if(cursor == NULL) // Om nått sista node och index för stort
         {
           return false;
         }
       i++;
-      pointer = pointer->next;
+      cursor = cursor->next;
     }
-  if(i == index && pointer == NULL) // Om vill lägga på på sista plats
+  if(i == index && cursor == NULL) // Om vill lägga på på sista plats
     {
       list_append(list, elem);
       return true;
     }
-  pointer = node_new(elem, pointer->next);
+  cursor = node_new(elem, cursor->next);
   return true;
 }
 
@@ -181,17 +181,16 @@ bool list_insert(list_t *list, int index, L elem)
 /// \returns true if succeeded, else 
 bool list_remove(list_t *list, int index, L *elem)
 {
-  node_t *pointer = list->first;
+  node_t *cursor = list->first;
   int i = 0;
-  
   if(index >= list_length(list))     // Denna måste ligga här innan vi går in i while-loopen tror jag
     {
       return false;
     }
   if(index == 0)
     {
-      node_t *tmp = pointer->next;
-      free(list->first);             // Enligt min körning med valgrind läcker vi fortfarande minne.      
+      node_t *tmp = cursor->next;
+      free(list->first);             // Enligt min körning med valgrind läcker vi fortfarande minne.
       list->first = tmp;
       return true;
     }
@@ -199,12 +198,12 @@ bool list_remove(list_t *list, int index, L *elem)
     {
       if (i == index)
         {
-          node_t *tmp = pointer->next;
-          free(pointer->next);      // Enligt min körning med valgrind läcker vi fortfarande minne.  
-          pointer->next = tmp->next;
+          node_t *tmp = cursor->next;
+          free(cursor->next);      // Enligt min körning med valgrind läcker vi fortfarande minne.
+          cursor->next = tmp->next;
           return true;
         }
-      pointer = pointer->next;
+      cursor = cursor->next;
     }
   return false;
 }
@@ -216,7 +215,7 @@ bool list_remove(list_t *list, int index, L *elem)
 L list_get(list_t *list, int index)
 {
   int i = 0;
-  node_t *pointer = list->first;
+  node_t *cursor = list->first;
   printf("start index: %d\n", index);
   if (index < 0)
     {
@@ -226,10 +225,10 @@ L list_get(list_t *list, int index)
   while (i != index)
     {
       printf("%d\n" , i  );
-    pointer = pointer->next;
+    cursor = cursor->next;
     i++;
   }
-  return pointer->rack;
+  return cursor->rack;
 }
 
 /// A convenience for list_get(list, 0)
