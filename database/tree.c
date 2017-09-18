@@ -41,6 +41,7 @@ tree_t *tree_new()
 
 
 node_t *node_new(K key, T elem)
+
 {
   node_t *new_node = calloc(1, sizeof(node_t));
   new_node->key = key;
@@ -81,6 +82,7 @@ void tree_delete(tree_t *tree)
     {
       tree_delete_helper(tree->top);
     }
+  free(tree);
 }
 
 /// Get the size of the tree 
@@ -305,7 +307,7 @@ int main(void)
 
   printf("%d\n", tree_depth(t));
   tree_delete(t);
-  printf("%d\n", tree_depth(t));
+  //printf("%d\n", tree_depth(t));
 
   
   //printf("%s\n", t->top->key);
