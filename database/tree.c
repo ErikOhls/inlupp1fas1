@@ -57,9 +57,30 @@ void print_specific(tree_t *tree)
 /// be removed. 
 ///
 /// \returns: empty tree
+bool tree_delete_helper(node_t *n)
+{
+  if(n == NULL)
+    {
+      puts("I free");
+      free(n);
+      return true;
+    }
+  puts("utanför");
+  return(tree_delete_helper(n->left) && tree_delete_helper(n->right));
+}
+
+
 void tree_delete(tree_t *tree)
 {
   // Ska alltså köra free() på SAMTLIGA noder.
+  if(tree->top == NULL)
+    {
+      free(tree->top);
+    }
+  else
+    {
+      tree_delete_helper(tree->top);
+    }
 }
 
 /// Get the size of the tree 
@@ -282,6 +303,11 @@ int main(void)
   tree_insert(t, "b", 9);
   tree_get(t, "b");
 
+  printf("%d\n", tree_depth(t));
+  tree_delete(t);
+  printf("%d\n", tree_depth(t));
+
+  
   //printf("%s\n", t->top->key);
 
  /*
