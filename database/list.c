@@ -17,6 +17,8 @@ struct rack
   int amount;
 };
 
+typedef struct node node_t;
+
 struct node
 {
   L rack;
@@ -45,13 +47,8 @@ void print_list(list_t* list)
     }
   else
     {
-      puts("Empty list ffs!");
+      puts("Empty list");
     }
-}
-
-void print_rack(L elem)
-{
-  printf("shelf = %s, amount = %d\n", elem.shelf, elem.amount); 
 }
 
 /// Creates a new list
@@ -212,7 +209,7 @@ bool list_remove(list_t *list, int index, L *elem)
 /// \param list  pointer to the list
 /// \param index the index to be returns
 /// \returns a pointer to the element at index index
-L list_get(list_t *list, int index)
+L *list_get(list_t *list, int index)
 {
   int i = 0;
   node_t *cursor = list->first;
@@ -228,22 +225,22 @@ L list_get(list_t *list, int index)
     cursor = cursor->next;
     i++;
   }
-  return cursor->rack;
+  return &cursor->rack;
 }
 
 /// A convenience for list_get(list, 0)
-L list_first(list_t *list)
+L *list_first(list_t *list)
 {
-  L first_e;
-  first_e = list->first->rack;
+  L *first_e;
+  first_e = &list->first->rack;
   return first_e;
 }
 
 /// A convenience for list_get(list, -1)
-L list_last(list_t *list)
+L *list_last(list_t *list)
 {
-  L last_e;
-  last_e = list->last->rack;
+  L *last_e;
+  last_e = &list->last->rack;
   return last_e;
 }
 
@@ -284,6 +281,5 @@ int main(void)
   list_remove(list, 2, &rack4);
   print_list(list);
   printf("List length = %d\n", list_length(list));
-  print_rack(list_get(list, -1));
   return 0;
 }

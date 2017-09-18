@@ -193,12 +193,19 @@ node_t *tree_insert_helper(node_t *cursor, K key, T elem, struct success *succes
 
 bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
 {
-  struct success* success= calloc(1, sizeof(struct success));    // Varför måste man göra struct här men inte på tree_get?
+  struct success* success= calloc(1, sizeof(struct success));
   success->value = false;
-  tree_insert_helper(tree->top, key, elem, success);
+  if(tree->top == NULL)
+    {
+      tree->top = node_new(key, elem);
+    }
+  else
+    {
+      tree_insert_helper(tree->top, key, elem, success);
+    }
   if(success->value)
     {
-      free(success);              // Funkar detta? success har fortfarande en adress
+      free(success);
       return true;
     }
   else
@@ -292,9 +299,6 @@ int main(void)
 {
   tree_t *t = tree_new();
 
-
-  t->top = node_new("A", 3);  // Måste manuelt göra första noden för tillfället.
-  puts("insert");
   tree_insert(t, "E", 1);
   tree_insert(t, "C", 2);
   tree_insert(t, "O", 4);
