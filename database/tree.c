@@ -58,29 +58,38 @@ void print_specific(tree_t *tree)
 /// be removed. 
 ///
 /// \returns: empty tree
-bool tree_delete_helper(node_t *n)
+void free_node(K key, T elem)
 {
-  if(n == NULL)
+  puts("in free_node");
+  printf("key = %s\n", key);
+  free(key);
+  //free(&elem); // Ligger inte heapen?
+}
+
+void tree_delete_helper(node_t *cursor, tree_action cleanup)
+{
+  if (cursor == NULL)
     {
-      puts("I free");
-      free(n);
-      return true;
+      return;
     }
-  puts("utanför");
-  return(tree_delete_helper(n->left) && tree_delete_helper(n->right));
+  tree_delete_helper(cursor->left, cleanup);
+  tree_delete_helper(cursor->right, cleanup);
+  printf("Deleting node: %d\n", cursor->elem);
+  printf("^ Key = %s\n", cursor->key);
+  //cleanup(cursor->key, cursor->elem);
+  free(cursor);
 }
 
 
-void tree_delete(tree_t *tree)
+void tree_delete(tree_t *tree, tree_action cleanup)
 {
-  // Ska alltså köra free() på SAMTLIGA noder.
   if(tree->top == NULL)
     {
       free(tree->top);
     }
   else
     {
-      tree_delete_helper(tree->top);
+      tree_delete_helper(tree->top, cleanup);
     }
   free(tree);
 }
@@ -307,10 +316,9 @@ int main(void)
   tree_insert(t, "a", 7);
   tree_insert(t, "B", 8);
   tree_insert(t, "b", 9);
-  tree_get(t, "b");
 
   printf("%d\n", tree_depth(t));
-  tree_delete(t);
+  tree_delete(t, free_node);
   //printf("%d\n", tree_depth(t));
 
   
@@ -347,3 +355,4 @@ int main(void)
   */
   return 0;
 }
+
