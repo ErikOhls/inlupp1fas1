@@ -10,12 +10,15 @@ answer_t ask_question(char *question, check_func check, convert_func convert)
 {
   int buf_siz = 255;
   char buf[buf_siz];
-  do
+
+  printf("%s", question);
+  scanf("%s", buf);
+
+  if(!check(buf))
     {
-      printf("%s", question);
-      scanf("%s", buf);
+      printf("Felaktig inmatning '%s'\n", buf);
+      ask_question(question, check, convert);
     }
-  while(!check(buf));
   return convert(buf);
 }
 

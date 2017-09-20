@@ -11,7 +11,7 @@ typedef char *K;
 /// Change this definition and replace int with the appropriate type
 /// in your program. Note, however, that your implementation of list.c
 /// should treat T as if it did not know the type.
-typedef int T;
+typedef void *T; // Void * för att trädet ska kunna ta in vad som helst.
 
 /// This function is used in tree_delete() to allow the trees which are
 /// the sole owners of their data to free the data on delete.

@@ -4,7 +4,6 @@
 #include <string.h>
 #include "tree.h"
 
-/// Define struct tree in your .c file not here! (why?)
 struct tree
 {
   struct node* top;
@@ -40,7 +39,7 @@ tree_t *tree_new()
 }
 
 
-node_t *node_new(K key, T elem)
+node_t *t_node_new(K key, T elem)
 
 {
   node_t *new_node = calloc(1, sizeof(node_t));
@@ -74,7 +73,6 @@ void tree_delete_helper(node_t *cursor, tree_action cleanup)
     }
   tree_delete_helper(cursor->left, cleanup);
   tree_delete_helper(cursor->right, cleanup);
-  printf("Deleting node: %d\n", cursor->elem);
   printf("^ Key = %s\n", cursor->key);
   //cleanup(cursor->key, cursor->elem);
   free(cursor);
@@ -177,7 +175,7 @@ node_t *tree_insert_helper(node_t *cursor, K key, T elem, struct success *succes
   if(cursor == NULL)               // Om tomma noden är nådd
     {
       //puts("hit");
-      cursor = node_new(key, elem);
+      cursor = t_node_new(key, elem);
       success->value = true;
       return cursor;
     }
@@ -206,7 +204,7 @@ bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
   success->value = false;
   if(tree->top == NULL)
     {
-      tree->top = node_new(key, elem);
+      tree->top = t_node_new(key, elem);
     }
   else
     {
@@ -288,7 +286,7 @@ T tree_get(tree_t *tree, K key)
 {
   T *elem = calloc(1, sizeof(T));  // Måste göra calloc, annars segfault i return i helper. Bättre sätt?
   tree_get_helper(tree->top, key, elem);
-  printf("elem found = %d\n", *elem);
+  //printf("elem found = %d\n", *elem);
   T tmp = *elem;
   free(elem);
   return tmp;
@@ -303,7 +301,7 @@ T tree_remove(tree_t *tree, K key)
 {
 
 }
-
+/*
 int main(void)
 {
   tree_t *t = tree_new();
@@ -352,7 +350,7 @@ int main(void)
   printf("%d\n",depth);
 
   printf("antalet noder %d\n",tree_size(t) );
-  */
   return 0;
 }
+*/
 

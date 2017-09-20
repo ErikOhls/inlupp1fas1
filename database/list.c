@@ -262,7 +262,7 @@ int list_length(list_t *list)
   return i;
 }
 
-
+/*
 int main(void)
 {
   list_t *list = list_new();
@@ -283,3 +283,4 @@ int main(void)
   printf("List length = %d\n", list_length(list));
   return 0;
 }
+*/
