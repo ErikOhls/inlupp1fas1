@@ -25,7 +25,18 @@ struct item
 
 typedef struct item item_t;
 
+/* ---- tmp ---- */
+void print_item_name(item_t *item)
+{
+  printf("%s\n", item->name);
+  return;
+}
 
+void print_db(list_t *list)
+{
+  //print_list(list, print_item_name);
+  return;
+}
 /* ---- Skriv ut meny ----*/
 
 void print_menu(void)

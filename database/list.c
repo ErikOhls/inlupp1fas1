@@ -16,9 +16,10 @@ typedef struct node node_t;
 
 struct node
 {
-  L rack;
+  L elem;
   struct node* next;
 };
+
 
 /// \file list.h
 ///
@@ -29,14 +30,14 @@ struct node
 
 
 /// ---- TESTING -----
-void print_list(list_t* list)
+void print_list(list_t* list, list_action* print_action)
 {
   node_t *cursor = list->first;
   if(cursor != NULL)
     {
       while(cursor != NULL)
         {
-          //printf("%s, %d\n", cursor->rack.shelf, cursor->rack.amount);
+          //print_action(cursor->elem); // :'(
           cursor = cursor->next;
         }
     }
@@ -45,6 +46,8 @@ void print_list(list_t* list)
       puts("Empty list");
     }
 }
+
+/// Print_list_typ - returnera element en åt gången eller nått
 
 /// Creates a new list
 ///
@@ -58,7 +61,7 @@ list_t *list_new()
 node_t *node_new(L elem, node_t *next)
 {
   node_t *new_node = malloc(sizeof(node_t));
-  new_node->rack = elem;
+  new_node->elem = elem;
   new_node->next = next;
   return new_node;
 }
@@ -220,14 +223,14 @@ L *list_get(list_t *list, int index)
     cursor = cursor->next;
     i++;
   }
-  return &cursor->rack;
+  return &cursor->elem;
 }
 
 /// A convenience for list_get(list, 0)
 L *list_first(list_t *list)
 {
   L *first_e;
-  first_e = &list->first->rack;
+  first_e = &list->first->elem;
   return first_e;
 }
 
@@ -235,7 +238,7 @@ L *list_first(list_t *list)
 L *list_last(list_t *list)
 {
   L *last_e;
-  last_e = &list->last->rack;
+  last_e = &list->last->elem;
   return last_e;
 }
 

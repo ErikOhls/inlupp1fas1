@@ -298,11 +298,11 @@ T tree_get(tree_t *tree, K key)
 /// \param tree pointer to the tree
 /// \param key the key of elem to be removed
 /// \returns: the removed element
-T tree_remove(tree_t *tree, K key)
+/*T tree_remove(tree_t *tree, K key)
 {
 
 }
-
+*/
 list_t* tree_to_list_helper(node_t *cursor, list_t *list)
 {
   if (cursor == NULL)
@@ -328,81 +328,3 @@ list_t *tree_to_list(tree_t *tree, list_t *list)
       return tree_to_list_helper(tree->top, list);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-int main(void)
-{
-  tree_t *t = tree_new();
-
-  tree_insert(t, "E", 1);
-  tree_insert(t, "C", 2);
-  tree_insert(t, "O", 4);
-  tree_insert(t, "R", 5);
-  tree_insert(t, "X", 6);
-  tree_insert(t, "a", 7);
-  tree_insert(t, "B", 8);
-  tree_insert(t, "b", 9);
-
-  printf("%d\n", tree_depth(t));
-  tree_delete(t, free_node);
-  //printf("%d\n", tree_depth(t));
-
-  
-  //printf("%s\n", t->top->key);
-
- /*
-  t->top->left = node_new("hejewq",4);
-  t->top->left->left = node_new("heja",4);
-  t->top->left->left->left = node_new("jjj",6);
-  t->top->left->left->left->right = node_new("jjj",6);
-  t->top->left->left->left->right->left = node_new("jjj",6);
-  t->top->left->left->left->right->left->right = node_new("jjj",6);
-  t->top->left->left->left->right->left->right->left = node_new("hej",6);
-  t->top->left->right= node_new("s",3);
-  t->top->left->right->left = node_new("s",3);
-  t->top->left->right->left->right = node_new("woppa",3);
-  t->top->left->right->left->right->left = node_new("s",3);
-  t->top->left->right->left->right->left->right = node_new("s",3);
-  t->top->left->right->left->right->left->right->left = node_new("snälla",6);
-
-  //tree_insert(t, "xxx", 6);
-  //print_specific(t);
-
-  //int depth = tree_depth(t);
-  //printf("%d\n",depth);
-
-  bool tree_key = tree_has_key(t,"snälla");
-  printf("%d\n", tree_key);
-
-  int depth = tree_depth(t);
-  printf("%d\n",depth);
-
-  printf("antalet noder %d\n",tree_size(t) );
-  return 0;
-}
-*/
-

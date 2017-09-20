@@ -29,6 +29,9 @@ typedef void* L;
 /// Review changes (docs only)
 /// Added new helper functions
 
+typedef void(*list_action)(list_t* list);
+
+void print_list(list_t* list, list_action* print_action);
 
 /// Creates a new list
 ///
