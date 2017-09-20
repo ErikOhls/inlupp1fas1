@@ -16,12 +16,12 @@ typedef struct list list_t;
 
 /// Change this definition and replace int with the appropriate type
 /// in your program.
-typedef struct rack L;
+typedef void* L;
 
 /// \file list.h
 ///
 /// \author Tobias Wrigstad
-/// \version 1.2
+///m \version 1.2
 /// \date 2017-09-13
 /// \bug None known. 
 ///

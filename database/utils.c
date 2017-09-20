@@ -76,6 +76,27 @@ bool is_menu_char(char *str)
     }
   return false;
 }
+bool is_menu_edit_char(char *str)
+{
+  if(strlen(str) != 1)
+    {
+      return false;
+    }
+  if(str[0] == 'B' ||
+     str[0] == 'b' ||
+     str[0] == 'P' ||
+     str[0] == 'p' ||
+     str[0] == 'L' ||
+     str[0] == 'l' ||
+     str[0] == 'T' ||
+     str[0] == 't' ||
+     str[0] == 'A' ||
+     str[0] == 'a')
+    {
+    return true;
+    }
+  return false;
+}
 
 int ask_question_int(char *question)
 {

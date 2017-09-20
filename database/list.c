@@ -11,11 +11,6 @@ struct list
  
 /// Change this definition and replace int with the appropriate type
 /// in your program.
-struct rack
-{
-  char *shelf;
-  int amount;
-};
 
 typedef struct node node_t;
 
@@ -41,7 +36,7 @@ void print_list(list_t* list)
     {
       while(cursor != NULL)
         {
-          printf("%s, %d\n", cursor->rack.shelf, cursor->rack.amount);
+          //printf("%s, %d\n", cursor->rack.shelf, cursor->rack.amount);
           cursor = cursor->next;
         }
     }

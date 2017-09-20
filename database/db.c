@@ -13,7 +13,7 @@ struct rack
   int amount;
 };
 
-typedef struct rack L;
+typedef struct rack rack_t;
 
 struct item
 {
@@ -30,13 +30,25 @@ typedef struct item item_t;
 
 void print_menu(void)
 {
-  puts("[L]ägga till en vara\n\
+  puts("\n[L]ägga till en vara\n\
 [T]a bort en vara\n\
 [R]edigera en vara\n\
 Ån[g]ra senaste ändringen\n\
 Lista [h]ela varukatalogen\n\
-[A]vsluta");
+[A]vsluta\n");
 }
+
+
+/* ---- Skriv ut meny för redigering av vara ---- */
+void print_edit()
+{
+  puts("\n[B]eskrivning\n\
+[P]ris\n\
+[L]agerhylla\n\
+An[t]al\n\
+\nVälj rad eller [a]vbryt: \n");
+}
+
 
 /* ---- Input hanterare för meny ----*/
 
@@ -50,6 +62,19 @@ char ask_question_menu(void)
   return true_c;
 }
 
+
+char ask_question_menu_edit(void)
+{
+  print_edit();
+  char *c = ask_question("Input:", is_menu_edit_char, (convert_func) strdup).s;
+  char true_c;
+  true_c = c[0];
+  true_c = toupper(true_c);
+  return true_c;
+}
+
+
+
 /* ---- Skriv ut item ----*/
 /*
 void print_item(item_t *it)
@@ -62,7 +87,9 @@ void print_item(item_t *it)
 item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 {
 
-  L shlf = { .shelf = slf, .amount = amnt  };
+  rack_t *shlf = calloc(1, sizeof(rack_t));
+  shlf->shelf = slf;
+  shlf->amount = amnt;
   item_t *itm = calloc(1, sizeof(item_t));
   itm->name = nm;
   itm->desc = dsc;
@@ -108,6 +135,8 @@ char *magick(char *adverbs[], char *verbs[], char *nouns[], int array_length)
 
 void list_db(tree_t *db)
 {
+  list_t *list = list_new();
+  list = tree_to_list(db, list);
   return;
 }
 
@@ -115,6 +144,7 @@ void list_db(tree_t *db)
 
 void edit_db(tree_t *db)
 {
+  
   return;
 }
 
@@ -141,6 +171,37 @@ void remove_item_from_db(tree_t *db)
 {
   return;
 }
+
+void event_loop_edit(tree_t *db)
+{
+  bool quit_v = true;
+  while(quit_v)
+        {
+          char option = ask_question_menu_edit();
+          switch(option)
+            {
+            case 'B' :
+              break;
+
+            case 'P' :
+              puts("Not yet implemented!");
+              break;
+
+            case 'L' :
+              puts("Not yet implemented!");
+              break;
+
+            case 'T' :
+              puts("Not yet implemented!");
+              break;
+
+            case 'A' :
+              quit_v = false;
+              break;
+            }
+        }
+}
+
 void event_loop(tree_t *db)
 {
   bool quit_v = true;
@@ -158,7 +219,7 @@ void event_loop(tree_t *db)
               break;
 
             case 'R' :
-              puts("Not yet implemented!");
+              event_loop_edit(db);
               break;
 
             case 'G' :
@@ -166,8 +227,7 @@ void event_loop(tree_t *db)
               break;
 
             case 'H' :
-              //printf("listans längd =%d", list_length(db->top->elem->list));
-              puts("Not yet implemented!");
+              list_db(db);
               break;
 
             case 'A' :
@@ -184,7 +244,6 @@ int main(int argc, char *argv[])
   puts("Välkommen till database v1.0 av Erik/Grim/Jonathan\n\
 ==================================================\n");
   tree_t *db = tree_new();
-  db->top = t_node_new();
   event_loop(db);
   return 0;
 }

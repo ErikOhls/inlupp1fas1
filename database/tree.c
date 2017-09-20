@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "tree.h"
+#include "list.h"
 
 struct tree
 {
@@ -301,6 +302,57 @@ T tree_remove(tree_t *tree, K key)
 {
 
 }
+
+list_t* tree_to_list_helper(node_t *cursor, list_t *list)
+{
+  if (cursor == NULL)
+    {
+      return list;
+    }
+  tree_to_list_helper(cursor->left, list);
+  tree_to_list_helper(cursor->right, list);
+  list_append(list, cursor->key);
+  return list;
+}
+
+
+list_t *tree_to_list(tree_t *tree, list_t *list)
+{
+  if(tree->top == NULL)
+    {
+      puts("No items");
+      return list;
+    }
+  else
+    {
+      return tree_to_list_helper(tree->top, list);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 int main(void)
 {
