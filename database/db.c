@@ -226,6 +226,7 @@ void event_loop(tree_t *db)
               break;
 
             case 'T' :
+              tree_keys(db);
               puts("Not yet implemented!");
               break;
 

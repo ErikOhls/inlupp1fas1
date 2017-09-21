@@ -24,6 +24,7 @@ struct success
 {
   bool value;
 };
+
 /// \file tree.h
 ///
 /// \author Tobias Wrigstad
@@ -327,4 +328,30 @@ list_t *tree_to_list(tree_t *tree, list_t *list)
     {
       return tree_to_list_helper(tree->top, list);
     }
+}
+
+
+K *keys_helper( node_t *cursor, K *array, int i)
+{
+ ++i; 
+ if (cursor == NULL)
+   {
+     return array;
+   }
+ if (cursor != NULL)
+   {
+     array[i] =  cursor->key; // antingen såhär eller list_append? fungerar ej...
+     printf("%s\n",array[i]);
+     keys_helper(cursor->left, array, i);
+     keys_helper(cursor->right, array, i);
+   }
+ return array;
+}
+
+
+K *tree_keys(tree_t * tree)
+{
+ int i = -1;
+ K *my_arr;
+ return keys_helper(tree->top, my_arr, i);
 }

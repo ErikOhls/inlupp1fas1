@@ -108,11 +108,10 @@ list_t *tree_to_list(tree_t *tree, list_t *t);
 ///
 
 /// Returns an array holding all the keys in the tree
-/// in ascending order.
-///
-/// \param tree pointer to the tree
-/// \returns: array of tree_size() keys
-//K *tree_keys(tree_t *tree);
+/// in ascendin
+K *tree_keys(tree_t *tree);
+
+
 
 /// Returns an array holding all the elements in the tree
 /// in ascending order of their keys (which are not part
