@@ -340,10 +340,10 @@ K *keys_helper( node_t *cursor, K *array, int i)
    }
  if (cursor != NULL)
    {
-     array[i] =  cursor->key; // antingen såhär eller list_append? fungerar ej...
-     printf("%s\n",array[i]);
      keys_helper(cursor->left, array, i);
      keys_helper(cursor->right, array, i);
+     array[i] =  cursor->key; 
+     printf("%s\n",array[i]);
    }
  return array;
 }
@@ -352,6 +352,6 @@ K *keys_helper( node_t *cursor, K *array, int i)
 K *tree_keys(tree_t * tree)
 {
  int i = -1;
- K *my_arr;
+ K *my_arr = calloc(1, sizeof(K *));
  return keys_helper(tree->top, my_arr, i);
 }
