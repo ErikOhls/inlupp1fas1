@@ -353,15 +353,5 @@ K *tree_keys(tree_t * tree)
 {
  int i = -1;
  K *my_arr = calloc(tree_size(tree), sizeof(K));
- K *tmp = keys_helper(tree->top, my_arr, &i);
- /*
- int it = 0;
- int page = 20;
- while(it < page)
-   {
-     printf("%d. %s\n", i+1, tmp[i]);
-     i++;
-   }
- */
- return tmp; //keys_helper(tree->top, my_arr, i);
+ return keys_helper(tree->top, my_arr, &i);
 }

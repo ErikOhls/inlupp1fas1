@@ -25,11 +25,6 @@ struct item
 
 typedef struct item item_t;
 
-typedef union {
-  int i;
-  char c;
-} answer_page;
-
 /* ---- tmp ---- */
 void print_item_name(item_t *item)
 {
@@ -43,7 +38,6 @@ void print_db(list_t *list)
   return;
 }
 /* ---- Skriv ut meny ----*/
-
 void print_menu(void)
 {
   puts("\n[L]ägga till en vara\n\
@@ -88,34 +82,8 @@ char ask_question_menu_edit(void)
   true_c = toupper(true_c);
   return true_c;
 }
-/*
-answer_page ask_question_page(void)
-{
-  puts("[N]ext to view next page\n\
-[A]vbryt för att återgå\n\
-[Siffra] för att välja vara\n");
-  char *c = ask_question("Input:", is_page_char, (convert_func) strdup).s;
-  if(isalpha(c))
-    {
-      char true_c;
-      true_c = toupper(c[0]);
-      return true_c;
-    }
-  else
-    {
-      return c;
-    }
-}
-*/
-/* ---- Skriv ut item ----*/
-/*
-void print_item(item_t *it)
-{
-  printf("Name:  %s\nDesc:  %s\nPrice: %d\nShelf: %s\nAmount: %d", it->name, it->desc, it->price, it->rack.shelf, it->rack.amount);
-}
-*/
-/* ---- Skapar item ----*/
 
+/* ---- Skapar item ----*/
 item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 {
 
@@ -129,6 +97,7 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
   if(!tree_has_key(db, itm->name))
     {
       //list_t *list = calloc(1, sizeof(list_t));
+      // TODO: Måste flytta detta till add_item tror jag. 
       list_t *list = list_new();
       itm->list = list;
     }
@@ -137,7 +106,6 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 }
 
 /* ---- Input hanterare för nya items ----*/
-
 item_t *input_item(tree_t *db)
 {
   char *name  = ask_question_string("Name of item:");
@@ -149,33 +117,38 @@ item_t *input_item(tree_t *db)
   return make_item(db, name, desc, price, shelf, amount);
 }
 
-/* ---- Magic naming ----*/
-
-char *magick(char *adverbs[], char *verbs[], char *nouns[], int array_length)
-{
-  char buf[255];
-  char * adverb  = adverbs[rand() % array_length];
-  char * verb    = verbs[rand() % array_length];
-  char * noun    = nouns[rand() % array_length];
-
-  sprintf(buf, "%s-%s %s", adverb, verb, noun);
-
-  return strdup(buf);
-}
-
 /* ---- Skriv ut databas ----*/
-
-
-void list_db(tree_t *db) // Funkar inte helt
+void list_db(tree_t *db)
 {
-  //K *key_lis  = calloc(tree_size(db), sizeof(K));
   K *key_list = tree_keys(db);
-  int i = 0;
-  int page = 20;
-  while(i < page)
+  int i = 1;                      // Visat index
+  int position = 0;               // Riktiga positionen i arrayen
+  int page = 20;                  // Limiter för antal visade varor
+  while(position < tree_size(db))
     {
-      printf("%d. %s\n", i+1, key_list[i]);
-      i++;
+      while(position < page)
+        {
+          printf("%d. %s\n", i, key_list[position]);
+          i++;
+          position++;
+        }
+      i = 1;                      // Återställ visat index
+      page += 20;                 // Incrementera en page
+      if(page > tree_size(db))    // Minskar page för att inte överskrida array size.
+        {
+          page += tree_size(db)-page;
+        }
+      puts("New page starts here\n");
+      // TODO:  ask_question_page
+      // Tror bästa sättet kan vara att göra två menyer. En för att välja nästa sida, Avsluta, eller
+      // välj vara. Och om man väljer välj vara så kör man ask_question_int. Annars måste
+      // Vi kolla om det är specifika bokstäver ELLER siffra.
+      // Plus att funktionen kan då inte köra toupper, utifall att det är en siffra.
+      // Och "siffran"(strängen), kan va längre än 1 iom att index går till 20. Så då måste vi returna
+      // char * istället för char som menyerna nu gör.
+      // Ja, osv osv. Blir lite fult, men tror det är mkt enklare att göra två menyer.
+
+      // visa/editera vara = key_list[page - <int answer> - 1]
     }
   return;
 }
@@ -195,6 +168,7 @@ void add_item_to_db(tree_t *db)
   char *key = item->name;
   if(tree_has_key(db, item->name))
     {
+      // TODO List append måste ske här, inte i insert(tror jag)
       return;
     }
   else
@@ -208,6 +182,7 @@ void add_item_to_db(tree_t *db)
 
 void remove_item_from_db(tree_t *db)
 {
+  // TODO: Först i inlupp 2.
   return;
 }
 
