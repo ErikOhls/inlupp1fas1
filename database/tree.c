@@ -181,12 +181,12 @@ node_t *tree_insert_helper(node_t *cursor, K key, T elem, struct success *succes
       success->value = true;
       return cursor;
     }
-  if(strcmp(cursor->key, key) < 0) // Vänster
+  if(strcmp(cursor->key, key) > 0) // Vänster
     {
       //puts("left");
       cursor->left = tree_insert_helper(cursor->left, key, elem, success);
     }
-  if(strcmp(cursor->key, key) > 0) // Höger
+  if(strcmp(cursor->key, key) < 0) // Höger
     {
       //puts("right");
       cursor->right = tree_insert_helper(cursor->right, key, elem, success);
@@ -331,9 +331,8 @@ list_t *tree_to_list(tree_t *tree, list_t *list)
 }
 
 
-K *keys_helper( node_t *cursor, K *array, int i)
+K *keys_helper( node_t *cursor, K *array, int *i)
 {
- ++i; 
  if (cursor == NULL)
    {
      return array;
@@ -341,9 +340,10 @@ K *keys_helper( node_t *cursor, K *array, int i)
  if (cursor != NULL)
    {
      keys_helper(cursor->left, array, i);
+     *i = *i + 1;
+     array[*i] =  cursor->key;
+     printf("%s\n", array[*i]);
      keys_helper(cursor->right, array, i);
-     array[i] =  cursor->key; 
-     printf("%s\n",array[i]);
    }
  return array;
 }
@@ -352,6 +352,16 @@ K *keys_helper( node_t *cursor, K *array, int i)
 K *tree_keys(tree_t * tree)
 {
  int i = -1;
- K *my_arr = calloc(1, sizeof(K *));
- return keys_helper(tree->top, my_arr, i);
+ K *my_arr = calloc(tree_size(tree), sizeof(K));
+ K *tmp = keys_helper(tree->top, my_arr, &i);
+ /*
+ int it = 0;
+ int page = 20;
+ while(it < page)
+   {
+     printf("%d. %s\n", i+1, tmp[i]);
+     i++;
+   }
+ */
+ return tmp; //keys_helper(tree->top, my_arr, i);
 }

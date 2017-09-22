@@ -25,6 +25,11 @@ struct item
 
 typedef struct item item_t;
 
+typedef union {
+  int i;
+  char c;
+} answer_page;
+
 /* ---- tmp ---- */
 void print_item_name(item_t *item)
 {
@@ -83,9 +88,25 @@ char ask_question_menu_edit(void)
   true_c = toupper(true_c);
   return true_c;
 }
-
-
-
+/*
+answer_page ask_question_page(void)
+{
+  puts("[N]ext to view next page\n\
+[A]vbryt för att återgå\n\
+[Siffra] för att välja vara\n");
+  char *c = ask_question("Input:", is_page_char, (convert_func) strdup).s;
+  if(isalpha(c))
+    {
+      char true_c;
+      true_c = toupper(c[0]);
+      return true_c;
+    }
+  else
+    {
+      return c;
+    }
+}
+*/
 /* ---- Skriv ut item ----*/
 /*
 void print_item(item_t *it)
@@ -144,36 +165,17 @@ char *magick(char *adverbs[], char *verbs[], char *nouns[], int array_length)
 
 /* ---- Skriv ut databas ----*/
 
-void list_db_helper(tree_t *db, K *key_list, int i, int page)
-{
-  while(i < page && i < tree_size(db))
-    {
-      printf("%d. %s\n", i+1, key_list[i]);
-      i++;
-    }
-}
 
 void list_db(tree_t *db) // Funkar inte helt
 {
+  //K *key_lis  = calloc(tree_size(db), sizeof(K));
   K *key_list = tree_keys(db);
   int i = 0;
   int page = 20;
-  while(i < tree_size(db))
+  while(i < page)
     {
-      list_db_helper(db, key_list, i, page);
-      i += 20;
-      if(i >= tree_size(db))
-        {
-          char *next  = ask_question_string("Press [N]ext to view next page or any other key to go back\n");
-          if(next[0] == 'n' && next[0] == 'N')
-            {
-              page += 20;
-            }
-          else
-            {
-              return;
-            } 
-        }
+      printf("%d. %s\n", i+1, key_list[i]);
+      i++;
     }
   return;
 }
@@ -285,20 +287,20 @@ int main(int argc, char *argv[])
   tree_insert(db, "test 1", make_item(db, "test 1", "dsc1", 1000, "A10", 100));
   tree_insert(db, "test 2", make_item(db, "test 2", "dsc2", 1000, "B10", 100));
   tree_insert(db, "test 3", make_item(db, "test 3", "dsc3", 1000, "C10", 100));
-  /*
+
   tree_insert(db, "Erik", make_item(db, "Erik", "Bäst av alla", 1000, "P20", 100));
   tree_insert(db, "Grim", make_item(db, "Grim", "Också bra", 1000, "R15", 100));
   tree_insert(db, "Jonathan", make_item(db, "Jonathan", "Stilig karl", 1000, "T50", 100));
   tree_insert(db, "Stol", make_item(db, "Stol", "dsc1", 1000, "Q65", 100));
   tree_insert(db, "Bord", make_item(db, "Bord", "dsc1", 1000, "L70", 100));
-  */
+
   tree_insert(db, "test 4", make_item(db, "test 4", "dsc4", 1000, "C20", 100));
   tree_insert(db, "test 5", make_item(db, "test 5", "dsc5", 1000, "C30", 100));
   tree_insert(db, "test 6", make_item(db, "test 6", "dsc6", 1000, "C40", 100));
   tree_insert(db, "test 7", make_item(db, "test 7", "dsc7", 1000, "C50", 100));
   tree_insert(db, "test 8", make_item(db, "test 8", "dsc8", 1000, "C60", 100));
   tree_insert(db, "test 9", make_item(db, "test 9", "dsc9", 1000, "C70", 100));
-  /*
+
   tree_insert(db, "test 10", make_item(db, "test 10", "dsc3", 1000, "C10", 100));
   tree_insert(db, "test 11", make_item(db, "test 11", "dsc3", 1000, "C10", 100));
   tree_insert(db, "test 12", make_item(db, "test 12", "dsc3", 1000, "C10", 100));
@@ -306,11 +308,11 @@ int main(int argc, char *argv[])
   tree_insert(db, "test 14", make_item(db, "test 14", "dsc3", 1000, "C10", 100));
   tree_insert(db, "test 15", make_item(db, "test 15", "dsc3", 1000, "C10", 100));
   tree_insert(db, "test 16", make_item(db, "test 16", "dsc3", 1000, "C10", 100));
-  */
-  //K *key_list = tree_keys(db);
+  tree_insert(db, "test 17", make_item(db, "test 17", "dsc3", 1000, "C10", 100));
+  tree_insert(db, "test 18", make_item(db, "test 18", "dsc3", 1000, "C10", 100));
+  tree_insert(db, "test 19", make_item(db, "test 19", "dsc3", 1000, "C10", 100));
+  tree_insert(db, "test 20", make_item(db, "test 20", "dsc3", 1000, "C10", 100));
 
-  //tree_keys funkar enbart med max 9 element i trädet, fattar inte varför
-  //Kallar man på tree_keys här i main, och sen i list_db får man segfault.
   puts("event loop");
   event_loop(db);
   return 0;
