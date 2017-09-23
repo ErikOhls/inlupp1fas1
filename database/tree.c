@@ -239,7 +239,7 @@ bool tree_has_key_helper(node_t *n, K key_el)
         }
       else
         {
-          return (tree_has_key_helper(n->right, key_el) || tree_has_key_helper(n->left,  key_el));  // Or? Hur vet vilken sida?
+          return (tree_has_key_helper(n->right, key_el) || tree_has_key_helper(n->left,  key_el));
         }
     }
   return false;
@@ -268,11 +268,11 @@ bool tree_has_key(tree_t *tree, K key)
 /// Detta funkar i princip(tror jag). Är jox med pekare jag inte får styr på.
 node_t *tree_get_helper(node_t *cursor, K key, T *elem)
 {
-  if(strcmp(cursor->key, key) < 0) // Vänster
+  if(strcmp(cursor->key, key) > 0) // Vänster
     {
       cursor->left = tree_get_helper(cursor->left, key, elem);
     }
-  if(strcmp(cursor->key, key) > 0) // Höger
+  if(strcmp(cursor->key, key) < 0) // Höger
     {
       cursor->right = tree_get_helper(cursor->right, key, elem);
     }
@@ -281,12 +281,12 @@ node_t *tree_get_helper(node_t *cursor, K key, T *elem)
       *elem = cursor->elem;
       return cursor;
     }
-  return cursor;                   // Inte intresserad av returen. Finns bättre lösning på denna funktion?
+  return cursor;
 }
 
 T tree_get(tree_t *tree, K key)
 {
-  T *elem = calloc(1, sizeof(T));  // Måste göra calloc, annars segfault i return i helper. Bättre sätt?
+  T *elem = calloc(1, sizeof(T));
   tree_get_helper(tree->top, key, elem);
   //printf("elem found = %d\n", *elem);
   T tmp = *elem;
@@ -304,32 +304,6 @@ T tree_get(tree_t *tree, K key)
 
 }
 */
-list_t* tree_to_list_helper(node_t *cursor, list_t *list)
-{
-  if (cursor == NULL)
-    {
-      return list;
-    }
-  tree_to_list_helper(cursor->left, list);
-  tree_to_list_helper(cursor->right, list);
-  list_append(list, cursor->key);
-  return list;
-}
-
-
-list_t *tree_to_list(tree_t *tree, list_t *list)
-{
-  if(tree->top == NULL)
-    {
-      puts("No items");
-      return list;
-    }
-  else
-    {
-      return tree_to_list_helper(tree->top, list);
-    }
-}
-
 
 K *keys_helper( node_t *cursor, K *array, int *i)
 {
@@ -342,7 +316,6 @@ K *keys_helper( node_t *cursor, K *array, int *i)
      keys_helper(cursor->left, array, i);
      *i = *i + 1;
      array[*i] =  cursor->key;
-     printf("%s\n", array[*i]);
      keys_helper(cursor->right, array, i);
    }
  return array;

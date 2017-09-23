@@ -260,6 +260,42 @@ int list_length(list_t *list)
   return i;
 }
 
+//////////// ================= Added in version 1.2 
+///
+/// NOTE: Implementing these functions is NOT mandatory
+///
+
+/// Deletes a list.
+///
+/// \param list pointer to the list
+/// \param cleanup a function that takes an element as
+///        argument, to be used to free memory. If this param is
+///        NULL, no cleanup of keys or elements will happen.
+void list_delete(list_t *list, list_action cleanup)
+{
+  return;
+}
+
+/// This function is used in list_apply() to allow applying a function
+/// to all elements in a list
+typedef void(*list_action2)(L elem, void *data);
+
+/// Applies a function to all elements in a list in list order
+///
+/// \param list the list
+/// \param fun the function to apply to all elements
+/// \param data an extra argument passed to each call to fun (may be NULL)
+void list_apply(list_t *list, list_action2 fun, void *data)
+{
+  int limit = list_length(list);
+  int i = 0;
+  while(i < limit)
+    {
+      //stuff
+    }
+  return;
+}
+
 /*
 int main(void)
 {

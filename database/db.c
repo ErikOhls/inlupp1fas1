@@ -55,8 +55,7 @@ An[t]al\n\
 }
 
 
-/* ---- Input hanterare för meny ----*/
-
+/* ---- Input hanterare för menyer ----*/
 char ask_question_menu(void)
 {
   print_menu();
@@ -81,26 +80,64 @@ char ask_question_menu_edit(void)
 /* ---- Skapar item ----*/
 item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 {
-
   rack_t *shlf = calloc(1, sizeof(rack_t));
   shlf->shelf = slf; // TODO: Måste spara shelf någonstans, för man ska inte kunna lägga till flera varor på samma shelf
   shlf->amount = amnt;
+
   item_t *itm = calloc(1, sizeof(item_t));
   itm->name = nm;
   itm->desc = dsc;
   itm->price = prc;
-  if(!tree_has_key(db, itm->name))
-    {
-      //list_t *list = calloc(1, sizeof(list_t));
-      // TODO: Måste flytta detta till add_item tror jag.
-      list_t *list = list_new();
-      itm->list = list;
-    }
+
+  list_t *list = list_new();
+  itm->list = list;
   list_append(itm->list, shlf);
+
   return itm;
 }
 
-/* ---- Input hanterare för nya items ----*/
+/* ---- Edit item ----*/
+void edit_desc(tree_t *db)
+{
+  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
+  printf("Current description: %s\n", edit->desc);
+  puts("--------------------------------\n");
+  edit->desc = ask_question_string("New description:");
+  return;
+}
+
+void edit_price(tree_t *db)
+{
+  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
+  printf("Current price: %d\n", edit->price);
+  puts("--------------------------------\n");
+  edit->price = ask_question_int("New price:");
+  return;
+}
+
+void edit_shelf(tree_t *db)
+{
+  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
+  puts("Current shelf(s):");
+  // lista alla shelfs... Dags att göra list apply?
+  puts("--------------------------------\n");
+  // Vilken shelf vill du ändra?
+  // ändra shelf
+  return;
+}
+
+void edit_amount(tree_t *db)
+{
+  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
+  puts("Current shelf(s) and amount(s):");
+  // lista alla shelfs... Dags att göra list apply?
+  puts("--------------------------------\n");
+  // Vilken shelf's amount vill du ändra?
+  // ändra shelf's amount
+  return;
+}
+
+/* ---- Input hanterare för items ----*/
 item_t *input_item(tree_t *db)
 {
   char *name  = ask_question_string("Name of item:");
@@ -160,16 +197,23 @@ void edit_db(tree_t *db)
 void add_item_to_db(tree_t *db)
 {
   item_t *item = input_item(db);
-  char *key = item->name;
-  if(tree_has_key(db, item->name))
+  puts("pre if");
+  printf("item->name = %s\n", item->name);
+  printf("strlen = %d\n", strlen(item->name));
+  if(tree_has_key(db, item->name)) // Detta funkar inte. Se main.
     {
       puts("has key");
-      // TODO List append måste ske här, inte i insert(tror jag)
+      //item_t *existing = tree_get(db, item->name);
+      // if(shelf exist)
+      //     existing amount += item amount
+      // else
+      //     list_append(list, item list)
       return;
     }
   else
     {
-      tree_insert(db, key, item);
+      puts("in else");
+      tree_insert(db, item->name, item);
       return;
     }
 }
@@ -191,18 +235,19 @@ void event_loop_edit(tree_t *db)
           switch(option)
             {
             case 'B' :
+              edit_desc(db);
               break;
 
             case 'P' :
-              puts("Not yet implemented!");
+              edit_price(db);
               break;
 
             case 'L' :
-              puts("Not yet implemented!");
+              edit_shelf(db);
               break;
 
             case 'T' :
-              puts("Not yet implemented!");
+              edit_amount(db);
               break;
 
             case 'A' :
@@ -223,7 +268,6 @@ void event_loop(tree_t *db)
             case 'L' :
               add_item_to_db(db);
               break;
-
             case 'T' :
               tree_keys(db);
               puts("Not yet implemented!");
@@ -255,7 +299,7 @@ int main(int argc, char *argv[])
   puts("Välkommen till database v1.0 av Erik/Grim/Jonathan\n\
 ==================================================\n");
   tree_t *db = tree_new();
-  tree_insert(db, "test 1", make_item(db, "test 1", "dsc1", 1000, "A10", 100));
+  tree_insert(db, "test1", make_item(db, "test1", "dsc1", 1000, "A10", 100));
   tree_insert(db, "test 2", make_item(db, "test 2", "dsc2", 1000, "B10", 100));
   tree_insert(db, "test 3", make_item(db, "test 3", "dsc3", 1000, "C10", 100));
 
@@ -284,7 +328,21 @@ int main(int argc, char *argv[])
   tree_insert(db, "test 19", make_item(db, "test 19", "dsc3", 1000, "C10", 100));
   tree_insert(db, "test 20", make_item(db, "test 20", "dsc3", 1000, "C10", 100));
 
-  puts("event loop");
+  //list_db(db);
+  //add_item_to_db(db);
+  /* tree_has_key funkar tydligen bara om man stoppar in en sträng direkt.
+  if(tree_has_key(db, "Erik"))
+    {
+      puts("true!");
+    }
+  else
+    {
+      puts("false");
+    }
+  */
+  item_t *tmp2 =  make_item(db, "Stol", "dsc1", 1000, "Q65", 100);
+  item_t *tmp = tree_get(db, tmp2->name);
+  printf("testing tree get. Key = %s", tmp->name);
   event_loop(db);
   return 0;
 }

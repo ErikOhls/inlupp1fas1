@@ -88,9 +88,6 @@ T tree_get(tree_t *tree, K key);
 /// \returns: the removed element
 T tree_remove(tree_t *tree, K key);
 
-
-
-list_t *tree_to_list(tree_t *tree, list_t *t);
 /// Swap the element for a given key for another.
 ///
 /// \param tree pointer to the tree
