@@ -26,11 +26,6 @@ struct item
 typedef struct item item_t;
 
 /* ---- tmp ---- */
-void print_item_name(item_t *item)
-{
-  printf("%s\n", item->name);
-  return;
-}
 
 void print_db(list_t *list)
 {
@@ -88,7 +83,7 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 {
 
   rack_t *shlf = calloc(1, sizeof(rack_t));
-  shlf->shelf = slf;
+  shlf->shelf = slf; // TODO: Måste spara shelf någonstans, för man ska inte kunna lägga till flera varor på samma shelf
   shlf->amount = amnt;
   item_t *itm = calloc(1, sizeof(item_t));
   itm->name = nm;
@@ -97,7 +92,7 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
   if(!tree_has_key(db, itm->name))
     {
       //list_t *list = calloc(1, sizeof(list_t));
-      // TODO: Måste flytta detta till add_item tror jag. 
+      // TODO: Måste flytta detta till add_item tror jag.
       list_t *list = list_new();
       itm->list = list;
     }
@@ -168,6 +163,7 @@ void add_item_to_db(tree_t *db)
   char *key = item->name;
   if(tree_has_key(db, item->name))
     {
+      puts("has key");
       // TODO List append måste ske här, inte i insert(tror jag)
       return;
     }
