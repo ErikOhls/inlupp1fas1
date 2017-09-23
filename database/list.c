@@ -272,10 +272,8 @@ typedef void(*list_action2)(L elem, void *data);
 /// \param data an extra argument passed to each call to fun (may be NULL)
 void list_apply(list_t *list, list_action2 fun, void *data)
 {
-  int limit = list_length(list);
-  int i = 0;
   node_t *cursor = list->first;
-  while(i < limit)
+  for(int i = 0; i < list_length(list); i++)
     {
       fun(cursor->elem, data);
       cursor = cursor->next;

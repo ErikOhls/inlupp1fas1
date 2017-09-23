@@ -233,7 +233,7 @@ bool tree_has_key_helper(node_t *n, K key_el)
 {
   while(n != NULL)
     {
-      if(n->key == key_el)
+      if(strcmp(n->key, key_el) == 0)
         {
           return true;
         }

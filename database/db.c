@@ -26,9 +26,15 @@ struct item
 typedef struct item item_t;
 
 /* ---- tmp ---- */
-void print_list(rack_t *elem, void* data)
+void print_shelfs(rack_t *elem, void *data)
 {
   printf("%s\n", elem->shelf);
+  return;
+}
+
+void print_amounts(rack_t *elem, void *data)
+{
+  printf("%s has %d nr of items\n", elem->shelf, elem->amount);
   return;
 }
 
@@ -119,10 +125,11 @@ void edit_shelf(tree_t *db)
 {
   item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
   puts("Current shelf(s):");
-  //list_apply(edit->list, print_list(), NULL) // in progress.
+  list_apply(edit->list, print_shelfs, NULL);
   puts("--------------------------------\n");
-  // Vilken shelf vill du ändra?
-  // ändra shelf
+  char *shelf_edit = ask_question_string("What shelf do you wish to change(case sensitive)?");
+  char *shelf_new = ask_question_string("What do you wish to change it to?");
+
   return;
 }
 
@@ -130,7 +137,7 @@ void edit_amount(tree_t *db)
 {
   item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
   puts("Current shelf(s) and amount(s):");
-  // lista alla shelfs... Dags att göra list apply?
+  list_apply(edit->list, print_amounts, NULL);
   puts("--------------------------------\n");
   // Vilken shelf's amount vill du ändra?
   // ändra shelf's amount
