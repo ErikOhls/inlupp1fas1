@@ -38,6 +38,16 @@ void print_amounts(rack_t *elem, void *data)
   return;
 }
 
+void has_shelf(rack_t *elem, void *data)
+{
+  return;
+}
+
+void get_shelf(rack_t *elem, void *data)
+{
+  return;
+}
+
 /* ---- Skriv ut meny ----*/
 void print_menu(void)
 {
@@ -99,49 +109,17 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
   itm->list = list;
   list_append(itm->list, shlf);
 
+  if(tree_has_key(db, itm->name))                 // Om item finns
+    {
+      puts("has key");
+      item_t *existing = tree_get(db, itm->name); // Hämta item
+      // if(shelf exist)
+      //     existing amount += item amount
+      // else
+      list_append(existing->list, shlf);          // Och appenda shelf
+    }
+
   return itm;
-}
-
-/* ---- Edit item ----*/
-void edit_desc(tree_t *db)
-{
-  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
-  printf("Current description: %s\n", edit->desc);
-  puts("--------------------------------\n");
-  edit->desc = ask_question_string("New description:");
-  return;
-}
-
-void edit_price(tree_t *db)
-{
-  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
-  printf("Current price: %d\n", edit->price);
-  puts("--------------------------------\n");
-  edit->price = ask_question_int("New price:");
-  return;
-}
-
-void edit_shelf(tree_t *db)
-{
-  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
-  puts("Current shelf(s):");
-  list_apply(edit->list, print_shelfs, NULL);
-  puts("--------------------------------\n");
-  char *shelf_edit = ask_question_string("What shelf do you wish to change(case sensitive)?");
-  char *shelf_new = ask_question_string("What do you wish to change it to?");
-
-  return;
-}
-
-void edit_amount(tree_t *db)
-{
-  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
-  puts("Current shelf(s) and amount(s):");
-  list_apply(edit->list, print_amounts, NULL);
-  puts("--------------------------------\n");
-  // Vilken shelf's amount vill du ändra?
-  // ändra shelf's amount
-  return;
 }
 
 /* ---- Input hanterare för items ----*/
@@ -154,6 +132,22 @@ item_t *input_item(tree_t *db)
   int amount  = ask_question_int("Amount of item:");
 
   return make_item(db, name, desc, price, shelf, amount);
+}
+
+/* ---- Adds item ---- */
+void add_item_to_db(tree_t *db)
+{
+  item_t *item = input_item(db);     // Gör nytt item
+  if(tree_has_key(db, item->name))   // Om item finns, gör inget(för list_append sker i input)
+    {
+      return;
+    }
+  else                               // Annars inserta item
+    {
+      puts("in else");
+      tree_insert(db, item->name, item);
+      return;
+    }
 }
 
 /* ---- Skriv ut databas ----*/
@@ -201,29 +195,47 @@ void edit_db(tree_t *db)
 
 /* ---- S ----*/
 
-void add_item_to_db(tree_t *db)
+/* ---- Edit item ----*/
+void edit_desc(tree_t *db)
 {
-  item_t *item = input_item(db);
-  puts("pre if");
-  printf("item->name = %s\n", item->name);
-  if(tree_has_key(db, item->name)) // Detta funkar inte. Se main.
-    {
-      puts("has key");
-      //item_t *existing = tree_get(db, item->name);
-      // if(shelf exist)
-      //     existing amount += item amount
-      // else
-      //     list_append(list, item list)
-      return;
-    }
-  else
-    {
-      puts("in else");
-      tree_insert(db, item->name, item);
-      return;
-    }
+  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
+  printf("Current description: %s\n", edit->desc);
+  puts("--------------------------------\n");
+  edit->desc = ask_question_string("New description:");
+  return;
 }
 
+void edit_price(tree_t *db)
+{
+  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
+  printf("Current price: %d\n", edit->price);
+  puts("--------------------------------\n");
+  edit->price = ask_question_int("New price:");
+  return;
+}
+
+void edit_shelf(tree_t *db)
+{
+  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
+  puts("Current shelf(s):");
+  list_apply(edit->list, print_shelfs, NULL);
+  puts("--------------------------------\n");
+  char *shelf_edit = ask_question_string("What shelf do you wish to change(case sensitive)?");
+  char *shelf_new = ask_question_string("What do you wish to change it to?");
+
+  return;
+}
+
+void edit_amount(tree_t *db)
+{
+  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
+  puts("Current shelf(s) and amount(s):");
+  list_apply(edit->list, print_amounts, NULL);
+  puts("--------------------------------\n");
+  // Vilken shelf's amount vill du ändra?
+  // ändra shelf's amount
+  return;
+}
 /* ---- I/O för radering av item från databas ----*/
 
 void remove_item_from_db(tree_t *db)
@@ -313,6 +325,7 @@ int main(int argc, char *argv[])
   tree_insert(db, "Grim", make_item(db, "Grim", "Också bra", 1000, "R15", 100));
   tree_insert(db, "Jonathan", make_item(db, "Jonathan", "Stilig karl", 1000, "T50", 100));
   tree_insert(db, "Stol", make_item(db, "Stol", "dsc1", 1000, "Q65", 100));
+  tree_insert(db, "Stol", make_item(db, "Stol", "dsc1", 1000, "Q70", 100));
   tree_insert(db, "Bord", make_item(db, "Bord", "dsc1", 1000, "L70", 100));
 
   tree_insert(db, "test 4", make_item(db, "test 4", "dsc4", 1000, "C20", 100));
