@@ -26,12 +26,12 @@ struct item
 typedef struct item item_t;
 
 /* ---- tmp ---- */
-
-void print_db(list_t *list)
+void print_list(rack_t *elem, void* data)
 {
-  //print_list(list, print_item_name);
+  printf("%s\n", elem->shelf);
   return;
 }
+
 /* ---- Skriv ut meny ----*/
 void print_menu(void)
 {
@@ -119,7 +119,7 @@ void edit_shelf(tree_t *db)
 {
   item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
   puts("Current shelf(s):");
-  // lista alla shelfs... Dags att göra list apply?
+  //list_apply(edit->list, print_list(), NULL) // in progress.
   puts("--------------------------------\n");
   // Vilken shelf vill du ändra?
   // ändra shelf
@@ -199,7 +199,6 @@ void add_item_to_db(tree_t *db)
   item_t *item = input_item(db);
   puts("pre if");
   printf("item->name = %s\n", item->name);
-  printf("strlen = %d\n", strlen(item->name));
   if(tree_has_key(db, item->name)) // Detta funkar inte. Se main.
     {
       puts("has key");
@@ -340,9 +339,6 @@ int main(int argc, char *argv[])
       puts("false");
     }
   */
-  item_t *tmp2 =  make_item(db, "Stol", "dsc1", 1000, "Q65", 100);
-  item_t *tmp = tree_get(db, tmp2->name);
-  printf("testing tree get. Key = %s", tmp->name);
   event_loop(db);
   return 0;
 }

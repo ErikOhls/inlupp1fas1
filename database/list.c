@@ -30,22 +30,7 @@ struct node
 
 
 /// ---- TESTING -----
-void print_list(list_t* list, list_action* print_action)
-{
-  node_t *cursor = list->first;
-  if(cursor != NULL)
-    {
-      while(cursor != NULL)
-        {
-          //print_action(cursor->elem); // :'(
-          cursor = cursor->next;
-        }
-    }
-  else
-    {
-      puts("Empty list");
-    }
-}
+
 
 /// Print_list_typ - returnera element en åt gången eller nått
 
@@ -289,9 +274,11 @@ void list_apply(list_t *list, list_action2 fun, void *data)
 {
   int limit = list_length(list);
   int i = 0;
+  node_t *cursor = list->first;
   while(i < limit)
     {
-      //stuff
+      fun(cursor->elem, data);
+      cursor = cursor->next;
     }
   return;
 }
