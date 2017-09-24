@@ -26,37 +26,37 @@ struct item
 typedef struct item item_t;
 
 /* ---- tmp ---- */
-void print_shelfs(rack_t *elem, void *data)
+void print_shelfs(void *elem, void *data)
 {
-  printf("%s\n", elem->shelf);
+  printf("%s\n", ((rack_t *)elem)->shelf);
   return;
 }
 
-void print_amounts(rack_t *elem, void *data)
+void print_amounts(void *elem, void *data)
 {
-  printf("%s has %d nr of items\n", elem->shelf, elem->amount);
+  printf("%s has %d nr of items\n", ((rack_t *)elem)->shelf, ((rack_t *)elem)->amount);
   return;
 }
 
-void change_shelf(rack_t *elem, void *exist)
+void change_shelf(void *elem, void *exist)
 {
-  if(strcmp(elem->shelf, exist) == 0)
+  if(strcmp(((rack_t *)elem)->shelf, exist) == 0)
     {
-      printf("Changing shelf: %s\n", elem->shelf);
+      printf("Changing shelf: %s\n", ((rack_t *)elem)->shelf);
       puts("--------------------------------\n");
-      elem->shelf = ask_question_shelf("New shelf:");
+      ((rack_t *)elem)->shelf = ask_question_shelf("New shelf:");
       strcpy(exist, "trueeeeeeeeeeeeeeeeee");// Detta för att vi ska veta att hyllan hittats.
     }
   return;
 }
 
-void change_amount(rack_t *elem, void *exist)
+void change_amount(void *elem, void *exist)
 {
-  if(strcmp(elem->shelf, exist) == 0)
+  if(strcmp(((rack_t *)elem)->shelf, exist) == 0)
     {
-      printf("Changing shelf: %s. With amount: %d\n", elem->shelf, elem->amount);
+      printf("Changing shelf: %s. With amount: %d\n", ((rack_t *)elem)->shelf, ((rack_t *)elem)->amount);
       puts("--------------------------------\n");
-      elem->amount = ask_question_int("New amount:");
+      ((rack_t *)elem)->amount = ask_question_int("New amount:");
       strcpy(exist, "trueeeeeeeeeeeeeeeeee");// Detta för att vi ska veta att hyllan hittats.
     }
   return;
@@ -230,13 +230,59 @@ Vä[l]j vara\n\
   return;
 }
 
-
-/* ---- Input hanterare för edit av databas ----*/
-void edit_db(tree_t *db)
+/* ---- Varuväljning för editering ----*/
+/*
+item_t *choose_list_db(tree_t *db)
 {
-  return;
-}
+  K *key_list = tree_keys(db);
+  int position = 0;               // Riktiga positionen i arrayen
+  int page = 10;                  // Limiter för antal visade varor
+  int page_ind = 0;
+  int ind;
+  item_t *chosen_item;
+  while(position < tree_size(db))
+    {
+      int i = 1;
+      while(position < page)
+        {
+          printf("%d. %s\n", i, key_list[position]);
+          i++;
+          position++;
+        }
+      i = 1;                      // Återställ visat index
 
+      puts("\n[V]isa nästa 20 varor\n\
+Vä[l]j vara\n\
+[A]vbryt\n");
+
+      char answer_id = ask_question_list_db();
+      switch(answer_id)
+        {
+        case 'L':
+          ind = ask_question_int("Vilken vara vill du välja?: ");
+          if(page > 10)
+            {
+              return tree_get(db, key_list[ind+page_ind-1]);
+            }
+          else
+            {
+              return tree_get(db, key_list[ind-1]);
+            }
+        case 'A':
+          event_loop(db);
+        case 'V':
+          page += 10;                 // Incrementera en page
+          page_ind +=10;
+          break;
+        }
+      if(page > tree_size(db))    // Minskar page för att inte överskrida array size.
+        {
+          page += tree_size(db)-page;
+        }
+    }
+  event_loop(db);
+}
+*/
 /* ---- S ----*/
 
 /* ---- Edit item ----*/
