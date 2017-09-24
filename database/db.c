@@ -50,6 +50,24 @@ void print_amounts(void *elem, void *data)
   return;
 }
 
+void shelf_exists_helper(void *elem, void *exist)
+{
+  printf("iterating, current shelf: %s\n", ((rack_t *)elem)->shelf);
+  if(strcmp(((rack_t *)elem)->shelf, exist) == 0)
+  {
+    printf("in shelf_exists_helper. tmp = %s\n", (char *)exist);
+    puts("shelf exists hit!");
+    strcpy(exist, "trueeeeeeeeeeeeeeeeee");
+    puts("post strcpy");
+  }
+}
+
+void shelf_exists(K key, T elem, void *data)
+{
+  //printf("in shelf_exists. tmp = %s\n", (char *)data);
+  list_apply(((item_t *)elem)->list, shelf_exists_helper, data);
+}
+
 void change_shelf(void *elem, void *exist)
 {
   if(strcmp(((rack_t *)elem)->shelf, exist) == 0)
@@ -149,7 +167,18 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
   list_t *list = list_new();
   itm->list = list;
   list_append(itm->list, shlf);
-
+  /*    Suck!!!!
+  printf("tmp = %s\nCalling tree_apply\n", slf);
+  tree_apply(db, inorder, shelf_exists, slf);
+  if(strlen(slf) > 10)
+    {
+      puts("shelf exist");
+    }
+  else
+    {
+      puts("shelf does not exist");
+    }
+  */
   if(tree_has_key(db, itm->name))                 // Om item finns
     {
       item_t *existing = tree_get(db, itm->name); // Hämta item
