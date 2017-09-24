@@ -137,7 +137,6 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 
   if(tree_has_key(db, itm->name))                 // Om item finns
     {
-      puts("has key");
       item_t *existing = tree_get(db, itm->name); // Hämta item
       // if(shelf exist)
       //     existing amount += item amount
@@ -233,7 +232,6 @@ Vä[l]j vara\n\
 }
 
 /* ---- Varuväljning för editering ----*/
-/*
 item_t *choose_list_db(tree_t *db)
 {
   K *key_list = tree_keys(db);
@@ -241,7 +239,8 @@ item_t *choose_list_db(tree_t *db)
   int page = 10;                  // Limiter för antal visade varor
   int page_ind = 0;
   int ind;
-  item_t *chosen_item;
+  item_t *false_item = calloc(1, sizeof(item_t));
+  false_item->name = "AVBRYT";     // Fulhax för att kunna returna i event_loop_edit
   while(position < tree_size(db))
     {
       int i = 1;
@@ -271,7 +270,7 @@ Vä[l]j vara\n\
               return tree_get(db, key_list[ind-1]);
             }
         case 'A':
-          event_loop(db);
+          return false_item;
         case 'V':
           page += 10;                 // Incrementera en page
           page_ind +=10;
@@ -282,41 +281,36 @@ Vä[l]j vara\n\
           page += tree_size(db)-page;
         }
     }
-  event_loop(db);
+  return false_item;
 }
-*/
-/* ---- S ----*/
 
 /* ---- Edit item ----*/
-void edit_desc(tree_t *db)
+void edit_desc(tree_t *db, item_t *item)
 {
-  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
-  printf("Current description: %s\n", edit->desc);
+  printf("Current description: %s\n", item->desc);
   puts("--------------------------------\n");
-  edit->desc = ask_question_string("New description:");
+  item->desc = ask_question_string("New description:");
   return;
 }
 
-void edit_price(tree_t *db)
+void edit_price(tree_t *db, item_t *item)
 {
-  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
-  printf("Current price: %d\n", edit->price);
+  printf("Current price: %d\n", item->price);
   puts("--------------------------------\n");
-  edit->price = ask_question_int("New price:");
+  item->price = ask_question_int("New price:");
   return;
 }
 
-void edit_shelf(tree_t *db)
+void edit_shelf(tree_t *db, item_t *item)
 {
-  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
   puts("Current shelf(s):");
-  list_apply(edit->list, print_shelfs, NULL); // Prints shelfs
+  list_apply(item->list, print_shelfs, NULL); // Prints shelfs
   puts("--------------------------------\n");
   bool has_shelf = true;
   while(has_shelf)
     {
       char *shelf_edit = ask_question_string("What shelf do you wish to change?(case sensitive)");
-      list_apply(edit->list, change_shelf, shelf_edit); // Ändrar shelf, om den finns.
+      list_apply(item->list, change_shelf, shelf_edit); // Ändrar shelf, om den finns.
       if(strlen(shelf_edit) > 10) // change_shelf ändrar shelf edit till lång sträng.
         {
           has_shelf = false;
@@ -325,17 +319,16 @@ void edit_shelf(tree_t *db)
   return;
 }
 
-void edit_amount(tree_t *db)
+void edit_amount(tree_t *db, item_t *item)
 {
-  item_t *edit = tree_get(db, "Stol"); // "Stol" tmp tills list funkar
   puts("Current shelf(s) and amount(s):");
-  list_apply(edit->list, print_amounts, NULL);
+  list_apply(item->list, print_amounts, NULL);
   puts("--------------------------------\n");
   bool has_shelf = true;
   while(has_shelf)
     {
       char *shelf_edit = ask_question_string("What shelf do you wish to change?(case sensitive)");
-      list_apply(edit->list, change_amount, shelf_edit);
+      list_apply(item->list, change_amount, shelf_edit);
       if(strlen(shelf_edit) > 10) // change_shelf ändrar shelf edit till lång sträng.
         {
           has_shelf = false;
@@ -354,25 +347,30 @@ void remove_item_from_db(tree_t *db)
 void event_loop_edit(tree_t *db)
 {
   bool quit_v = true;
+  item_t *chosen_item = choose_list_db(db);
+  if(strcmp(chosen_item->name, "AVBRYT") == 0) // Avbryt valdes i choose_list_db
+    {
+      return;
+    }
   while(quit_v)
         {
           char option = ask_question_menu_edit();
           switch(option)
             {
             case 'B' :
-              edit_desc(db);
+              edit_desc(db, chosen_item);
               break;
 
             case 'P' :
-              edit_price(db);
+              edit_price(db, chosen_item);
               break;
 
             case 'L' :
-              edit_shelf(db);
+              edit_shelf(db, chosen_item);
               break;
 
             case 'T' :
-              edit_amount(db);
+              edit_amount(db, chosen_item);
               break;
 
             case 'A' :
@@ -454,18 +452,6 @@ int main(int argc, char *argv[])
   tree_insert(db, "test 19", make_item(db, "test 19", "dsc3", 1000, "C10", 100));
   tree_insert(db, "test 20", make_item(db, "test 20", "dsc3", 1000, "C10", 100));
 
-  //list_db(db);
-  //add_item_to_db(db);
-  /* tree_has_key funkar tydligen bara om man stoppar in en sträng direkt.
-  if(tree_has_key(db, "Erik"))
-    {
-      puts("true!");
-    }
-  else
-    {
-      puts("false");
-    }
-  */
   event_loop(db);
   return 0;
 }
