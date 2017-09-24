@@ -38,15 +38,30 @@ void print_amounts(rack_t *elem, void *data)
   return;
 }
 
-void has_shelf(rack_t *elem, void *data)
+void change_shelf(rack_t *elem, void *exist)
 {
+  if(strcmp(elem->shelf, exist) == 0)
+    {
+      printf("Changing shelf: %s\n", elem->shelf);
+      puts("--------------------------------\n");
+      elem->shelf = ask_question_shelf("New shelf:");
+      strcpy(exist, "trueeeeeeeeeeeeeeeeee");// Detta för att vi ska veta att hyllan hittats.
+    }
   return;
 }
 
-void get_shelf(rack_t *elem, void *data)
+void change_amount(rack_t *elem, void *exist)
 {
+  if(strcmp(elem->shelf, exist) == 0)
+    {
+      printf("Changing shelf: %s. With amount: %d\n", elem->shelf, elem->amount);
+      puts("--------------------------------\n");
+      elem->amount = ask_question_int("New amount:");
+      strcpy(exist, "trueeeeeeeeeeeeeeeeee");// Detta för att vi ska veta att hyllan hittats.
+    }
   return;
 }
+
 
 /* ---- Skriv ut meny ----*/
 void print_menu(void)
@@ -187,7 +202,6 @@ void list_db(tree_t *db)
 }
 
 /* ---- Input hanterare för edit av databas ----*/
-
 void edit_db(tree_t *db)
 {
   return;
@@ -220,9 +234,16 @@ void edit_shelf(tree_t *db)
   puts("Current shelf(s):");
   list_apply(edit->list, print_shelfs, NULL);
   puts("--------------------------------\n");
-  char *shelf_edit = ask_question_string("What shelf do you wish to change(case sensitive)?");
-  char *shelf_new = ask_question_string("What do you wish to change it to?");
-
+  bool has_shelf = true;
+  while(has_shelf)
+    {
+      char *shelf_edit = ask_question_string("What shelf do you wish to change?(case sensitive)");
+      list_apply(edit->list, change_shelf, shelf_edit);
+      if(strlen(shelf_edit) > 10) // change_shelf ändrar shelf edit till lång sträng.
+        {
+          has_shelf = false;
+        }
+    }
   return;
 }
 
@@ -232,8 +253,16 @@ void edit_amount(tree_t *db)
   puts("Current shelf(s) and amount(s):");
   list_apply(edit->list, print_amounts, NULL);
   puts("--------------------------------\n");
-  // Vilken shelf's amount vill du ändra?
-  // ändra shelf's amount
+  bool has_shelf = true;
+  while(has_shelf)
+    {
+      char *shelf_edit = ask_question_string("What shelf do you wish to change?(case sensitive)");
+      list_apply(edit->list, change_amount, shelf_edit);
+      if(strlen(shelf_edit) > 10) // change_shelf ändrar shelf edit till lång sträng.
+        {
+          has_shelf = false;
+        }
+    }
   return;
 }
 /* ---- I/O för radering av item från databas ----*/
