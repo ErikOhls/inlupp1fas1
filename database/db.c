@@ -26,9 +26,14 @@ struct item
 typedef struct item item_t;
 
 /* ---- tmp ---- */
+void print_tree(K key, T elem, void *data)
+{
+  printf("%s\n", (char *)key);
+}
+
 void print_shelfs(void *elem, void *data)
 {
-  printf("%s\n", ((rack_t *)elem)->shelf);
+  printf("%s\n", ((rack_t *)elem)->shelf); // ((rack_t *)elem) = typdefintion
   return;
 }
 
@@ -450,6 +455,7 @@ int main(int argc, char *argv[])
   tree_insert(db, "test 19", make_item(db, "test 19", "dsc3", 1000, "C10", 100));
   tree_insert(db, "test 20", make_item(db, "test 20", "dsc3", 1000, "C10", 100));
 
+  //tree_apply(db, inorder, print_tree, NULL);
   event_loop(db);
   return 0;
 }
