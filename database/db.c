@@ -6,6 +6,10 @@
 #include "list.h"
 #include "tree.h"
 
+//////////// ================= STRUCTS
+///
+/// Structs for items and racks
+/// TODO: Ångra
 
 struct rack
 {
@@ -25,7 +29,10 @@ struct item
 
 typedef struct item item_t;
 
-/* ---- tmp ---- */
+//////////// ================= APPLY FUNCTIONS
+///
+/// Functions for use in tree_apply and list_apply
+///
 void print_tree(K key, T elem, void *data)
 {
   printf("%s\n", (char *)key);
@@ -68,7 +75,10 @@ void change_amount(void *elem, void *exist)
 }
 
 
-/* ---- Skriv ut meny ----*/
+//////////// ================= MENU DISPLAYS
+///
+/// Displays menus
+///
 void print_menu(void)
 {
   puts("\n[L]ägga till en vara\n\
@@ -79,8 +89,6 @@ Lista [h]ela varukatalogen\n\
 [A]vsluta\n");
 }
 
-
-/* ---- Skriv ut meny för redigering av vara ---- */
 void print_edit()
 {
   puts("\n[B]eskrivning\n\
@@ -90,8 +98,10 @@ An[t]al\n\
 \nVälj rad eller [a]vbryt: \n");
 }
 
-
-/* ---- Input hanterare för menyer ----*/
+//////////// ================= ASK QUESTIONS
+///
+/// Functions for converting input to useable variables
+///
 char ask_question_list_db(void)
 {
   char *c = ask_question("Input:", is_list_db_char, (convert_func) strdup).s;
@@ -100,8 +110,6 @@ char ask_question_list_db(void)
   true_c = toupper(true_c);
   return true_c;
 }
-
-
 
 char ask_question_menu(void)
 {
@@ -113,7 +121,6 @@ char ask_question_menu(void)
   return true_c;
 }
 
-
 char ask_question_menu_edit(void)
 {
   print_edit();
@@ -124,7 +131,10 @@ char ask_question_menu_edit(void)
   return true_c;
 }
 
-/* ---- Skapar item ----*/
+//////////// ================= MAKE ITEMS
+///
+/// Functions for making and adding items to db
+/// TODO: Fix shelf duplicates
 item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 {
   rack_t *shlf = calloc(1, sizeof(rack_t));
@@ -152,7 +162,6 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
   return itm;
 }
 
-/* ---- Input hanterare för items ----*/
 item_t *input_item(tree_t *db)
 {
   char *name  = ask_question_string("Name of item:");
@@ -164,7 +173,6 @@ item_t *input_item(tree_t *db)
   return make_item(db, name, desc, price, shelf, amount);
 }
 
-/* ---- Adds item ---- */
 void add_item_to_db(tree_t *db)
 {
   item_t *item = input_item(db);     // Gör nytt item
@@ -180,7 +188,10 @@ void add_item_to_db(tree_t *db)
     }
 }
 
-/* ---- Skriv ut databas ----*/
+//////////// ================= LIST DB
+///
+/// Funtion to display the database and specific items in the database
+///
 void list_db(tree_t *db)
 {
   K *key_list = tree_keys(db);
@@ -234,7 +245,10 @@ Vä[l]j vara\n\
   return;
 }
 
-/* ---- Varuväljning för editering ----*/
+//////////// ================= CHOOSE ITEM
+///
+/// Function to display the database, and choose an item to edit.
+///
 item_t *choose_list_db(tree_t *db)
 {
   K *key_list = tree_keys(db);
@@ -287,7 +301,10 @@ Vä[l]j vara\n\
   return false_item;
 }
 
-/* ---- Edit item ----*/
+//////////// ================= EDIT ITEM
+///
+/// function to edit various values of items.
+///
 void edit_desc(tree_t *db, item_t *item)
 {
   printf("Current description: %s\n", item->desc);
@@ -339,14 +356,20 @@ void edit_amount(tree_t *db, item_t *item)
     }
   return;
 }
-/* ---- I/O för radering av item från databas ----*/
-
+//////////// ================= REMOVE ITEM
+///
+/// TODO: Inlupp 2
+///
 void remove_item_from_db(tree_t *db)
 {
   // TODO: Först i inlupp 2.
   return;
 }
 
+//////////// ================= EVENT LOOPS
+///
+/// Handles menus
+///
 void event_loop_edit(tree_t *db)
 {
   bool quit_v = true;
@@ -418,8 +441,10 @@ void event_loop(tree_t *db)
         }
 }
 
-/* ---- MAIN ----*/
-
+//////////// ================= MAIN
+///
+/// Does the shit
+///
 int main(int argc, char *argv[])
 {
   puts("Välkommen till database v1.0 av Erik/Grim/Jonathan\n\
