@@ -34,7 +34,7 @@ void print_shelfs(void *elem, void *data)
 
 void print_amounts(void *elem, void *data)
 {
-  printf("%s has %d nr of items\n", ((rack_t *)elem)->shelf, ((rack_t *)elem)->amount);
+  printf("Lagerhylla: %s\nAntal: %d\n", ((rack_t *)elem)->shelf, ((rack_t *)elem)->amount);
   return;
 }
 
@@ -208,12 +208,14 @@ Vä[l]j vara\n\
             {
               item_t *my_elem = tree_get(db, key_list[ind+page_ind-1]);
               printf("Namn: %s\nBeskrivning: %s\nPris: %d\n", key_list[ind+page_ind-1], my_elem->desc, my_elem->price);
+              list_apply(my_elem->list, print_amounts, NULL);
             }
           else
             {
               item_t *my_elem = tree_get(db, key_list[ind-1]);
               printf("Namn: %s\nBeskrivning: %s\nPris: %d\n", key_list[ind-1], my_elem->desc, my_elem->price);
-            }
+              list_apply(my_elem->list, print_amounts, NULL);
+}
           return;
         case 'A':
           return;
