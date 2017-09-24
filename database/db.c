@@ -137,7 +137,6 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 
   if(tree_has_key(db, itm->name))                 // Om item finns
     {
-      puts("has key");
       item_t *existing = tree_get(db, itm->name); // Hämta item
       // if(shelf exist)
       //     existing amount += item amount
@@ -451,18 +450,6 @@ int main(int argc, char *argv[])
   tree_insert(db, "test 19", make_item(db, "test 19", "dsc3", 1000, "C10", 100));
   tree_insert(db, "test 20", make_item(db, "test 20", "dsc3", 1000, "C10", 100));
 
-  //list_db(db);
-  //add_item_to_db(db);
-  /* tree_has_key funkar tydligen bara om man stoppar in en sträng direkt.
-  if(tree_has_key(db, "Erik"))
-    {
-      puts("true!");
-    }
-  else
-    {
-      puts("false");
-    }
-  */
   event_loop(db);
   return 0;
 }
