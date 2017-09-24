@@ -72,6 +72,17 @@ An[t]al\n\
 
 
 /* ---- Input hanterare för menyer ----*/
+char ask_question_list_db(void)
+{
+  char *c = ask_question("Input:", is_list_db_char, (convert_func) strdup).s;
+  char true_c;
+  true_c = c[0];
+  true_c = toupper(true_c);
+  return true_c;
+}
+
+
+
 char ask_question_menu(void)
 {
   print_menu();
@@ -154,11 +165,13 @@ void add_item_to_db(tree_t *db)
 void list_db(tree_t *db)
 {
   K *key_list = tree_keys(db);
-  int i = 1;                      // Visat index
   int position = 0;               // Riktiga positionen i arrayen
-  int page = 20;                  // Limiter för antal visade varor
+  int page = 10;                  // Limiter för antal visade varor
+  int page_ind = 0;
+  int ind;
   while(position < tree_size(db))
     {
+      int i = 1;
       while(position < page)
         {
           printf("%d. %s\n", i, key_list[position]);
@@ -166,25 +179,44 @@ void list_db(tree_t *db)
           position++;
         }
       i = 1;                      // Återställ visat index
-      page += 20;                 // Incrementera en page
-      if(page > tree_size(db))    // Minskar page för att inte överskrida array size.
-        {
-          page += tree_size(db)-page;
-        }
-      puts("New page starts here\n");
-      // TODO:  ask_question_page
-      // Tror bästa sättet kan vara att göra två menyer. En för att välja nästa sida, Avsluta, eller
-      // välj vara. Och om man väljer välj vara så kör man ask_question_int. Annars måste
-      // Vi kolla om det är specifika bokstäver ELLER siffra.
-      // Plus att funktionen kan då inte köra toupper, utifall att det är en siffra.
-      // Och "siffran"(strängen), kan va längre än 1 iom att index går till 20. Så då måste vi returna
-      // char * istället för char som menyerna nu gör.
-      // Ja, osv osv. Blir lite fult, men tror det är mkt enklare att göra två menyer.
 
-      // visa/editera vara = key_list[page - <int answer> - 1]
+puts("\n[V]isa nästa 20 varor\n\
+Vä[l]j vara\n\
+[A]vbryt\n");
+
+ char answer_id = ask_question_list_db();
+ switch(answer_id)
+   {
+   case 'L':
+     ind = ask_question_int("Vilken vara vill du välja?: ");
+     if(page > 10)
+       {
+       item_t *my_elem = tree_get(db, key_list[ind+page_ind-1]);
+       printf("Namn: %s\nBeskrivning: %s\nPris: %d\n", key_list[ind+page_ind-1], my_elem->desc, my_elem->price);
+       }
+     else
+       {
+         item_t *my_elem = tree_get(db, key_list[ind-1]);
+         printf("Namn: %s\nBeskrivning: %s\nPris: %d\n", key_list[ind-1], my_elem->desc, my_elem->price);
+       }
+       return;
+   case 'A':
+     return;
+   case 'V':
+     page += 10;                 // Incrementera en page
+     page_ind +=10;
+     break;
+   }
+ if(page > tree_size(db))    // Minskar page för att inte överskrida array size.
+   {
+     page += tree_size(db)-page;
+   }    
     }
   return;
 }
+
+ 
+
 
 /* ---- Input hanterare för edit av databas ----*/
 

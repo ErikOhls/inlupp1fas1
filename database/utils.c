@@ -98,6 +98,24 @@ bool is_menu_edit_char(char *str)
   return false;
 }
 
+bool is_list_db_char(char *str)
+{
+  if(strlen(str) != 1)
+    {
+      return false;
+    }
+  if(str[0] == 'V' ||
+     str[0] == 'v' ||
+     str[0] == 'L' ||
+     str[0] == 'l' ||
+     str[0] == 'A' ||
+     str[0] == 'a')
+    {
+    return true;
+    }
+  return false;
+}
+
 int ask_question_int(char *question)
 {
   answer_t answer = ask_question(question, is_number, (convert_func) atoi);
