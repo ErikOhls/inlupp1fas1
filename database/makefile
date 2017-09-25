@@ -1,4 +1,5 @@
 COMPILER = gcc -Wall -g -c
+funkycommitcheck = gcc
 db: db.c utils.o tree.o list.o
 		$(COMPILER) utils.o tree.o list.o db.c -o db
 
