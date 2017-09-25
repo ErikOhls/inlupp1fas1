@@ -6,7 +6,6 @@
 #include "list.h"
 #include "tree.h"
 
-
 struct rack
 {
   char *shelf;
@@ -24,6 +23,15 @@ struct item
 };
 
 typedef struct item item_t;
+
+struct action
+{
+  int type; // NOTHING = 0, ADD = 1, REMOVE = 2, EDIT = 3
+  item_t *merch;
+  item_t copy;
+};
+
+typedef struct action action_t;
 
 /* ---- tmp ---- */
 void print_shelfs(void *elem, void *data)
@@ -169,7 +177,6 @@ void add_item_to_db(tree_t *db)
     }
   else                               // Annars inserta item
     {
-      puts("in else");
       tree_insert(db, item->name, item);
       return;
     }
@@ -344,10 +351,12 @@ void remove_item_from_db(tree_t *db)
   return;
 }
 
-void event_loop_edit(tree_t *db)
+void event_loop_edit(tree_t *db, action_t *undo)
 {
   bool quit_v = true;
   item_t *chosen_item = choose_list_db(db);
+  undo->copy = *chosen_item;
+  undo->merch = chosen_item;
   if(strcmp(chosen_item->name, "AVBRYT") == 0) // Avbryt valdes i choose_list_db
     {
       return;
@@ -378,30 +387,55 @@ void event_loop_edit(tree_t *db)
               break;
             }
         }
+  
+}
+
+void undo_func(action_t undo)
+{
+  if(undo.type == 0)
+    {
+      puts("Det finns inget att ångra");
+    }
+  if(undo.type == 1)
+    {
+      puts("Inte implementerat");
+    }
+  if(undo.type == 2)
+    {
+      puts("Inte implementerat");
+    }
+  if(undo.type == 3)
+    {
+      puts("Ångrade din senaste redigering");
+      *undo.merch = undo.copy;      
+    }
 }
 
 void event_loop(tree_t *db)
 {
   bool quit_v = true;
+  action_t undo = {.type = 0};
   while(quit_v)
         {
           char option = ask_question_menu();
           switch(option)
             {
             case 'L' :
+              undo.type = 1;
               add_item_to_db(db);
               break;
             case 'T' :
-              tree_keys(db);
+              undo.type = 2;
               puts("Not yet implemented!");
               break;
 
             case 'R' :
-              event_loop_edit(db);
+              undo.type = 3;
+              event_loop_edit(db, &undo);
               break;
 
             case 'G' :
-              puts("Not yet implemented!");
+              undo_func(undo);
               break;
 
             case 'H' :

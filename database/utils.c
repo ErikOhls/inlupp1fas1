@@ -122,6 +122,7 @@ int ask_question_int(char *question)
   return answer.i; // svaret som ett heltal
 }
 
+
 int read_string(char *buf, int buf_siz)
 {
   int i = 0;
@@ -136,6 +137,7 @@ int read_string(char *buf, int buf_siz)
   buf[i-1] = '\0';
   return i;
 }
+
 
 char *ask_question_string(char *question)
 {

@@ -1,17 +1,25 @@
+COMPILER = gcc -Wall -c -g
+
 db: db.c utils.o tree.o list.o
-		gcc -Wall -g utils.o tree.o list.o db.c -o db
+		${COMPILER} utils.o tree.o list.o db.c -o db
 
 utils.o: utils.c utils.h
-		gcc -Wall -g utils.c -c
+		 ${COMPILER} utils.c
 
 tree.o: tree.c tree.h
-		gcc -Wall -g tree.c -c
+		${COMPILER} tree.c
 
 list.o: list.c list.h
-		gcc -Wall -g list.c -c
+		${COMPILER} list.c
 
 run: db
 		./db
 
 debug: db
 		gdb db
+
+clean:
+	rm list.o tree.o utils.o -f
+
+
+.PHONY: run debug clean 
