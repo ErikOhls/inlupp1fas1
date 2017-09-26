@@ -44,9 +44,9 @@ tree_t *tree_new()
 node_t *t_node_new(K key, T elem)
 
 {
-  node_t *new_node = calloc(1, sizeof(node_t));
-  new_node->key = key;
-  new_node->elem = elem;
+  node_t *new_node = calloc(1, sizeof(node_t)); //allocates memory for new node pointer 
+  new_node->key = key; 
+  new_node->elem = elem; // assigns two values of type K (***) and T (***)
   return new_node;
 }
 
@@ -101,22 +101,22 @@ int tree_size_helper(node_t *cursor)
 {
   int size = 0;
 
-  if (cursor == NULL)              // Tomt träd
+  if (cursor == NULL)              // if it is an empty tree, return size...
     {
       return size;
     }
-  if (cursor != NULL)              // Om ej tomt träd
+  if (cursor != NULL)              // if not an empty tree, recurse through tree, get size by plus 1 for every node.
     {
-      if (cursor->right != NULL)   // Höger
+      if (cursor->right != NULL)   // if tree has right node, recurse and add 1 to size
         {
           size += tree_size_helper(cursor->right);
         }
-      if (cursor->left != NULL)    // Vänster
+      if (cursor->left != NULL)     // if tree has right left node, recurse and add 1 to size
         {
           size += tree_size_helper(cursor->left);
         } 
     }
-  return size +1;
+  return size +1; // if end node has no children, add node to size and return.
 }
 
 
@@ -132,20 +132,20 @@ int tree_size(tree_t *tree)
 int tree_depth_helper(node_t *n)
 {
   int node_l, node_r;
-  if(n == NULL)                                 // Tomt träd
+  if(n == NULL)                                 //if empty tree
     {
       return 0;
     }
   else
     {
-      node_l = tree_depth_helper(n->left)+1;
+      node_l = tree_depth_helper(n->left)+1; //recursion, go to both right and left tree and add 1 to depth
       node_r = tree_depth_helper(n->right)+1;
     }
-  if(node_l > node_r)                           // Om vänster djupare
+  if(node_l > node_r)                           // if left node is deeper than right node, go left
     {
       return node_l;
     }
-  else                                          // Om höger djupare
+  else                                          // if right node is deeper than left node, go right
     {
       return node_r;
     }
@@ -171,7 +171,7 @@ int tree_depth(tree_t *tree)
 /// \param elem the element 
 /// \returns: true if successful, else false
 
-/// Funkar bara om man manuelt lägger in första noden. Varför??
+/// Funkar bara om man manuelt lägger in första noden. Varför?? 
 node_t *tree_insert_helper(node_t *cursor, K key, T elem, struct success *success)
 {
   if(cursor == NULL)               // Om tomma noden är nådd
@@ -181,36 +181,36 @@ node_t *tree_insert_helper(node_t *cursor, K key, T elem, struct success *succes
       success->value = true;
       return cursor;
     }
-  if(strcmp(cursor->key, key) > 0) // Vänster
+  if(strcmp(cursor->key, key) > 0) // recursively goes to left node if string is shorter than cursor  node
     {
       //puts("left");
       cursor->left = tree_insert_helper(cursor->left, key, elem, success);
     }
-  if(strcmp(cursor->key, key) < 0) // Höger
+  if(strcmp(cursor->key, key) < 0) // recursively goes right if string is longer than cursor node
     {
       //puts("right");
       cursor->right = tree_insert_helper(cursor->right, key, elem, success);
     }
-  if(strcmp(cursor->key, key) == 0)// Finns
+  if(strcmp(cursor->key, key) == 0)// if the string is identical to the existing node in tree, return the place of node.
     {
       //puts("exist");
       return cursor;
       success->value = false;
     }
-  return cursor;                   // Skicka cursor bakåt i rekursiven
+  return cursor;                   // 
 }
 
-bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än
+bool tree_insert(tree_t *tree, K key, T elem) // Ej helt funktionell än *** förstår inte success funktionalitet
 {
   struct success* success= calloc(1, sizeof(struct success));
   success->value = false;
   if(tree->top == NULL)
     {
-      tree->top = t_node_new(key, elem);
+      tree->top = t_node_new(key, elem); //if top node is empty, insert a node in top of tree
     }
   else
     {
-      tree_insert_helper(tree->top, key, elem, success);
+      tree_insert_helper(tree->top, key, elem, success); 
     }
   if(success->value)
     {
