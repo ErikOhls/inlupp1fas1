@@ -215,11 +215,11 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 
 item_t *input_item(tree_t *db)
 {
-  char *name  = ask_question_string("Name of item:");
-  char *desc  = ask_question_string("Description of item:");
-  int price   = ask_question_int("Price of item:");
-  char *shelf = ask_question_shelf("Item stored on shelf:");
-  int amount  = ask_question_int("Amount of item:");
+  char *name  = ask_question_string("Varans namn: ");
+  char *desc  = ask_question_string("Beskrivning av vara: ");
+  int price   = ask_question_int("Varans pris: ");
+  char *shelf = ask_question_shelf("Varans hylla: ");
+  int amount  = ask_question_int("Varans antal: ");
 
   return make_item(db, name, desc, price, shelf, amount);
 }
@@ -251,7 +251,7 @@ void list_db(tree_t *db)
 {
   K *key_list = tree_keys(db);
   int position = 0;               // Riktiga positionen i arrayen
-  int page = 10;                  // Limiter för antal visade varor
+  int page = 20;                  // Limiter för antal visade varor
   int page_ind = 0;
   int ind;
   while(position < tree_size(db))
@@ -274,7 +274,7 @@ Vä[l]j vara\n\
         {
         case 'L':
           ind = ask_question_int("Vilken vara vill du välja?: ");
-          if(page > 10)
+          if(page > 20)
             {
               item_t *my_elem = tree_get(db, key_list[ind+page_ind-1]);
               printf("Namn: %s\nBeskrivning: %s\nPris: %d\n", key_list[ind+page_ind-1], my_elem->desc, my_elem->price);
@@ -290,8 +290,8 @@ Vä[l]j vara\n\
         case 'A':
           return;
         case 'V':
-          page += 10;                 // Incrementera en page
-          page_ind +=10;
+          page += 20;                 // Incrementera en page
+          page_ind +=20;
           break;
         }
       if(page > tree_size(db))    // Minskar page för att inte överskrida array size.
@@ -311,7 +311,7 @@ item_t *choose_list_db(tree_t *db)
 {
   K *key_list = tree_keys(db);
   int position = 0;               // Riktiga positionen i arrayen
-  int page = 10;                  // Limiter för antal visade varor
+  int page = 20;                  // Limiter för antal visade varor
   int page_ind = 0;
   int ind;
   item_t *false_item = calloc(1, sizeof(item_t));
@@ -336,7 +336,7 @@ Vä[l]j vara\n\
         {
         case 'L':
           ind = ask_question_int("Vilken vara vill du välja?: ");
-          if(page > 10)
+          if(page > 20)
             {
               return tree_get(db, key_list[ind+page_ind-1]);
             }
@@ -347,8 +347,8 @@ Vä[l]j vara\n\
         case 'A':
           return false_item;
         case 'V':
-          page += 10;                 // Incrementera en page
-          page_ind +=10;
+          page += 20;                 // Incrementera en page
+          page_ind +=20;
           break;
         }
       if(page > tree_size(db))    // Minskar page för att inte överskrida array size.
@@ -365,29 +365,29 @@ Vä[l]j vara\n\
 ///
 void edit_desc(tree_t *db, item_t *item)
 {
-  printf("Current description: %s\n", item->desc);
+  printf("Nuvarande beskrivning: %s\n", item->desc);
   puts("--------------------------------\n");
-  item->desc = ask_question_string("New description:");
+  item->desc = ask_question_string("Ny beskrivning: ");
   return;
 }
 
 void edit_price(tree_t *db, item_t *item)
 {
-  printf("Current price: %d\n", item->price);
+  printf("Nuvarande pris: %d\n", item->price);
   puts("--------------------------------\n");
-  item->price = ask_question_int("New price:");
+  item->price = ask_question_int("Nytt pris: ");
   return;
 }
 
 void edit_shelf(tree_t *db, item_t *item)
 {
-  puts("Current shelf(s):");
+  puts("Nuvarande hyllor: ");
   list_apply(item->list, print_shelfs, NULL); // Prints shelfs
   puts("--------------------------------\n");
   bool has_shelf = true;
   while(has_shelf)
     {
-      char *shelf_edit = ask_question_string("What shelf do you wish to change?(case sensitive)");
+      char *shelf_edit = ask_question_string("Vilken hylla vill du ändra?(case sensitive)");
       list_apply(item->list, change_shelf, shelf_edit); // Ändrar shelf, om den finns.
       if(strlen(shelf_edit) > 10) // change_shelf ändrar shelf edit till lång sträng.
         {
@@ -399,13 +399,13 @@ void edit_shelf(tree_t *db, item_t *item)
 
 void edit_amount(tree_t *db, item_t *item)
 {
-  puts("Current shelf(s) and amount(s):");
+  puts("Nuvarande hyllor och antal: ");
   list_apply(item->list, print_amounts, NULL);
   puts("--------------------------------\n");
   bool has_shelf = true;
   while(has_shelf)
     {
-      char *shelf_edit = ask_question_string("What shelf do you wish to change?(case sensitive)");
+      char *shelf_edit = ask_question_string("Vilken hylla vill du ändra?(case sensitive): ");
       list_apply(item->list, change_amount, shelf_edit);
       if(strlen(shelf_edit) > 10) // change_shelf ändrar shelf edit till lång sträng.
         {
@@ -505,7 +505,7 @@ void event_loop(tree_t *db)
               break;
             case 'T' :
               undo.type = 2;
-              puts("Not yet implemented!");
+              puts("Inte implementerat!");
               break;
 
             case 'R' :
