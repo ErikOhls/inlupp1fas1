@@ -65,22 +65,12 @@ void print_amounts(void *elem, void *data)
   return;
 }
 
-void shelf_exists_helper(void *elem, void *exist)
+void shelf_exist(void *elem, void *exist)
 {
-  printf("iterating, current shelf: %s\n", ((rack_t *)elem)->shelf);
   if(strcmp(((rack_t *)elem)->shelf, exist) == 0)
-  {
-    printf("in shelf_exists_helper. tmp = %s\n", (char *)exist);
-    puts("shelf exists hit!");
-    strcpy(exist, "trueeeeeeeeeeeeeeeeee");
-    puts("post strcpy");
-  }
-}
-
-void shelf_exists(K key, T elem, void *data)
-{
-  //printf("in shelf_exists. tmp = %s\n", (char *)data);
-  list_apply(((item_t *)elem)->list, shelf_exists_helper, data);
+    {
+      strcpy(exist, "trueeeeeeeeeeeeeeeeee");
+    }
 }
 
 void change_shelf(void *elem, void *exist)
@@ -107,7 +97,27 @@ void change_amount(void *elem, void *exist)
   return;
 }
 
+//////////// ================= AUX
+///
+/// Auxilary functions
+//
 
+bool shelf_existance(tree_t *db, char *shelf_name)
+{
+  T *elem_list = tree_elements(db);
+  for(int i = 0; i < tree_size(db); i++)
+    {
+      item_t *current = elem_list[i];
+      list_t *current_list = current->list;
+      char *shelf_tmp = strdup(shelf_name);
+      list_apply(current_list, shelf_exist, shelf_tmp);
+      if(strlen(shelf_tmp) > 10)
+        {
+          return true;
+        }
+    }
+  return false;
+}
 //////////// ================= MENU DISPLAYS
 ///
 /// Displays menus
@@ -182,18 +192,15 @@ item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
   list_t *list = list_new();
   itm->list = list;
   list_append(itm->list, shlf);
-  /*    Suck!!!!
-  printf("tmp = %s\nCalling tree_apply\n", slf);
-  tree_apply(db, inorder, shelf_exists, slf);
-  if(strlen(slf) > 10)
+
+
+  if(shelf_existance(db, slf))
     {
-      puts("shelf exist");
+      printf("Vara finns redan på hylla %s, pröva igen\n", slf);
+      itm->name = "AVBRYT";
+      return itm;
     }
-  else
-    {
-      puts("shelf does not exist");
-    }
-  */
+
   if(tree_has_key(db, itm->name))                 // Om item finns
     {
       item_t *existing = tree_get(db, itm->name); // Hämta item
@@ -220,8 +227,13 @@ item_t *input_item(tree_t *db)
 void add_item_to_db(tree_t *db)
 {
   item_t *item = input_item(db);     // Gör nytt item
+  if(strcmp("AVBRYT", item->name) == 0)
+    {
+      return;
+    }
   if(tree_has_key(db, item->name))   // Om item finns, gör inget(för list_append sker i input)
     {
+      printf("Vara %s finns redan", item->name);
       return;
     }
   else                               // Annars inserta item
