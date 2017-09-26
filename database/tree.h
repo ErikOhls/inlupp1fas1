@@ -116,13 +116,13 @@ K *tree_keys(tree_t *tree);
 ///
 /// \param tree pointer to the tree
 /// \returns: array of tree_size() elements
-//T *tree_elements(tree_t *tree);
+T *tree_elements(tree_t *tree);
 
 /// This function is used in tree_apply() to allow applying a function
 /// to all elements in a tree. 
-//typedef void(*tree_action2)(K key, T elem, void *data);
+typedef void(*tree_action2)(K key, T elem, void *data);
 
-//enum tree_order { inorder = 0, preorder = -1, postorder = 1 };
+enum tree_order { inorder = 0, preorder = -1, postorder = 1 };
 
 /// Applies a function to all elements in the tree in a specified order.
 /// Example (using shelf as key):
@@ -139,6 +139,6 @@ K *tree_keys(tree_t *tree);
 /// \param order the order in which the elements will be visited
 /// \param fun the function to apply to all elements
 /// \param data an extra argument passed to each call to fun (may be NULL)
-//void tree_apply(tree_t *tree, enum tree_order order, tree_action2 fun, void *data);
+void tree_apply(tree_t *tree, enum tree_order order, tree_action2 fun, void *data);
 
 #endif

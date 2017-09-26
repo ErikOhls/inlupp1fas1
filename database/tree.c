@@ -304,7 +304,13 @@ T tree_get(tree_t *tree, K key)
 
 }
 */
+//////////// ================= Added in version 1.2
+///
+/// NOTE: Implementing these functions is NOT mandatory
+///
 
+/// Returns an array holding all the keys in the tree
+/// in ascendin
 K *keys_helper( node_t *cursor, K *array, int *i)
 {
  if (cursor == NULL)
@@ -327,4 +333,118 @@ K *tree_keys(tree_t * tree)
  int i = -1;
  K *my_arr = calloc(tree_size(tree), sizeof(K));
  return keys_helper(tree->top, my_arr, &i);
+}
+
+/// Returns an array holding all the elements in the tree
+/// in ascending order of their keys (which are not part
+/// of the value).
+///
+/// \param tree pointer to the tree
+/// \returns: array of tree_size() elements
+T *elements_helper( node_t *cursor, T *array, int *i)
+{
+  if (cursor == NULL)
+    {
+      return array;
+    }
+  if (cursor != NULL)
+    {
+      elements_helper(cursor->left, array, i);
+      *i = *i + 1;
+      array[*i] =  cursor->elem;
+      elements_helper(cursor->right, array, i);
+    }
+  return array;
+}
+
+T *tree_elements(tree_t *tree)
+{
+  int i = -1;
+  T *my_arr = calloc(tree_size(tree), sizeof(T));
+  return elements_helper(tree->top, my_arr, &i);
+}
+
+/// Applies a function to all elements in the tree in a specified order.
+/// Example (using shelf as key):
+///
+///     tree_t *t = tree_new();
+///     tree_insert(t, "A25", some_item);
+///     int number = 0;
+///     tree_apply(t, inorder, print_item, &number);
+///
+/// where print_item is a function that prints the number and increments it,
+/// and prints the item passed to it. 
+///
+/// \param tree the tree
+/// \param order the order in which the elements will be visited
+/// \param fun the function to apply to all elements
+/// \param data an extra argument passed to each call to fun (may be NULL)
+
+/// ---------- IN ORDER ----------
+void tapply_inorder(node_t *cursor, tree_action2 fun, void *data)
+{
+  if (cursor == NULL)
+    {
+      return;
+    }
+  if (cursor != NULL)
+    {
+      tapply_inorder(cursor->left, fun, data);
+      fun(cursor->key, cursor->elem, data);
+      tapply_inorder(cursor->right, fun, data);
+    }
+  return;
+}
+
+/// ---------- PRE ORDER ----------
+void tapply_preorder(node_t *cursor, tree_action2 fun, void *data)
+{
+  if (cursor == NULL)
+    {
+      return;
+    }
+  if (cursor != NULL)
+    {
+      fun(cursor->key, cursor->elem, data);
+      tapply_preorder(cursor->left, fun, data);
+      tapply_preorder(cursor->right, fun, data);
+    }
+  return;
+}
+
+/// ---------- POST ORDER ----------
+void tapply_postorder(node_t *cursor, tree_action2 fun, void *data)
+{
+  if (cursor == NULL)
+    {
+      return;
+    }
+  if (cursor != NULL)
+    {
+      tapply_postorder(cursor->left, fun, data);
+      tapply_postorder(cursor->right, fun, data);
+      fun(cursor->key, cursor->elem, data);
+    }
+  return;
+}
+
+/// ---------- TREE_APPLY ----------
+void tree_apply(tree_t *tree, enum tree_order order, tree_action2 fun, void *data)
+{
+  if(order == inorder)
+    {
+      tapply_inorder(tree->top, fun, data);
+      return;
+    }
+  if(order == preorder)
+    {
+      tapply_preorder(tree->top, fun, data);
+      return;
+    }
+  if(order == postorder)
+    {
+      tapply_postorder(tree->top, fun, data);
+      return;
+    }
+  return;
 }
