@@ -101,7 +101,6 @@ void change_amount(void *elem, void *exist)
 ///
 /// Auxilary functions
 //
-
 bool shelf_existance(tree_t *db, char *shelf_name)
 {
   T *elem_list = tree_elements(db);
@@ -117,6 +116,14 @@ bool shelf_existance(tree_t *db, char *shelf_name)
         }
     }
   return false;
+}
+
+void print_item(item_t* item)
+{
+  printf("Namn: %s\n", item->name);
+  printf("Beskrivning: %s\n", item->desc);
+  printf("Pris: %d\n", item->price);
+  list_apply(item->list, print_amounts, NULL);
 }
 //////////// ================= MENU DISPLAYS
 ///
@@ -277,14 +284,12 @@ Vä[l]j vara\n\
           if(page > 20)
             {
               item_t *my_elem = tree_get(db, key_list[ind+page_ind-1]);
-              printf("Namn: %s\nBeskrivning: %s\nPris: %d\n", key_list[ind+page_ind-1], my_elem->desc, my_elem->price);
-              list_apply(my_elem->list, print_amounts, NULL);
+              print_item(my_elem);
             }
           else
             {
               item_t *my_elem = tree_get(db, key_list[ind-1]);
-              printf("Namn: %s\nBeskrivning: %s\nPris: %d\n", key_list[ind-1], my_elem->desc, my_elem->price);
-              list_apply(my_elem->list, print_amounts, NULL);
+              print_item(my_elem);
 }
           return;
         case 'A':
@@ -368,6 +373,8 @@ void edit_desc(tree_t *db, item_t *item)
   printf("Nuvarande beskrivning: %s\n", item->desc);
   puts("--------------------------------\n");
   item->desc = ask_question_string("Ny beskrivning: ");
+  puts("Uppdaterad vara:\n");
+  print_item(item);
   return;
 }
 
@@ -376,6 +383,8 @@ void edit_price(tree_t *db, item_t *item)
   printf("Nuvarande pris: %d\n", item->price);
   puts("--------------------------------\n");
   item->price = ask_question_int("Nytt pris: ");
+  puts("Uppdaterad vara:\n");
+  print_item(item);
   return;
 }
 
@@ -394,6 +403,8 @@ void edit_shelf(tree_t *db, item_t *item)
           has_shelf = false;
         }
     }
+  puts("Uppdaterad vara:\n");
+  print_item(item);
   return;
 }
 
@@ -412,6 +423,8 @@ void edit_amount(tree_t *db, item_t *item)
           has_shelf = false;
         }
     }
+  puts("Uppdaterad vara:\n");
+  print_item(item);
   return;
 }
 //////////// ================= REMOVE ITEM
@@ -555,17 +568,17 @@ int main(int argc, char *argv[])
   tree_insert(db, "test 8", make_item(db, "test 8", "dsc8", 1000, "C60", 100));
   tree_insert(db, "test 9", make_item(db, "test 9", "dsc9", 1000, "C70", 100));
 
-  tree_insert(db, "test 10", make_item(db, "test 10", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 11", make_item(db, "test 11", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 12", make_item(db, "test 12", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 13", make_item(db, "test 13", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 14", make_item(db, "test 14", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 15", make_item(db, "test 15", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 16", make_item(db, "test 16", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 17", make_item(db, "test 17", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 18", make_item(db, "test 18", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 19", make_item(db, "test 19", "dsc3", 1000, "C10", 100));
-  tree_insert(db, "test 20", make_item(db, "test 20", "dsc3", 1000, "C10", 100));
+  tree_insert(db, "test 10", make_item(db, "test 10", "dsc3", 1000, "P10", 100));
+  tree_insert(db, "test 11", make_item(db, "test 11", "dsc3", 1000, "D10", 100));
+  tree_insert(db, "test 12", make_item(db, "test 12", "dsc3", 1000, "F10", 100));
+  tree_insert(db, "test 13", make_item(db, "test 13", "dsc3", 1000, "T10", 100));
+  tree_insert(db, "test 14", make_item(db, "test 14", "dsc3", 1000, "E10", 100));
+  tree_insert(db, "test 15", make_item(db, "test 15", "dsc3", 1000, "Q10", 100));
+  tree_insert(db, "test 16", make_item(db, "test 16", "dsc3", 1000, "W10", 100));
+  tree_insert(db, "test 17", make_item(db, "test 17", "dsc3", 1000, "V10", 100));
+  tree_insert(db, "test 18", make_item(db, "test 18", "dsc3", 1000, "H10", 100));
+  tree_insert(db, "test 19", make_item(db, "test 19", "dsc3", 1000, "J10", 100));
+  tree_insert(db, "test 20", make_item(db, "test 20", "dsc3", 1000, "K10", 100));
 
   //tree_apply(db, inorder, print_tree, NULL);
   event_loop(db);
