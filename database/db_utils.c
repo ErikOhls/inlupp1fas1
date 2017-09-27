@@ -147,6 +147,7 @@ char ask_question_menu(void)
   char true_c;
   true_c = c[0];
   true_c = toupper(true_c);
+  printf("ask_question_menu returning: %d", true_c);
   return true_c;
 }
 

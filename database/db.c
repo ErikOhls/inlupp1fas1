@@ -47,7 +47,7 @@ void list_db(tree_t *db)
   int position = 0;               // Riktiga positionen i arrayen
   int page = 20;                  // Limiter för antal visade varor
   int page_ind = 0;
-  int ind;
+  int ind = -1;
   while(position < tree_size(db))
     {
       int i = 1;
@@ -60,14 +60,17 @@ void list_db(tree_t *db)
       i = 1;                      // Återställ visat index
 
       print_list_db();
-      
+
       char answer_id = ask_question_list_db();
       switch(answer_id)
         {
         case 'L':
           do
             {
-            ind = ask_question_int("Vilken vara vill du välja?: ") + page_ind-1;
+              while(ind < 0 || ind > tree_size(db))
+                {
+                  ind = ask_question_int("Vilken vara vill du välja?: ") + page_ind-1;
+                }
             }
           while(ind >= tree_size(db));
           item_t *my_elem = tree_get(db, key_list[ind]);
@@ -203,7 +206,7 @@ void undo_func(action_t undo)
   if(undo.type == 3)
     {
       puts("Ångrade din senaste redigering");
-      *undo.merch = undo.copy;      
+      *undo.merch = undo.copy;
     }
 }
 
@@ -283,7 +286,7 @@ int main(int argc, char *argv[])
   tree_insert(db, "test 18", make_item(db, "test 18", "dsc3", 1000, "H10", 100));
   tree_insert(db, "test 19", make_item(db, "test 19", "dsc3", 1000, "J10", 100));
   tree_insert(db, "test 20", make_item(db, "test 20", "dsc3", 1000, "K10", 100));
-
+;
   event_loop(db);
   return 0;
 }

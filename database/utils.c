@@ -6,6 +6,16 @@
 
 #include "utils.h"
 
+void clear_input_buffer()
+{
+  int c;
+  while(c != '\n' && c != EOF)
+    {
+      c = getchar();
+    }
+  putchar('\n');
+}
+
 answer_t ask_question(char *question, check_func check, convert_func convert)
 {
   int buf_siz = 255;
@@ -13,12 +23,13 @@ answer_t ask_question(char *question, check_func check, convert_func convert)
 
   printf("%s", question);
   read_string(buf, buf_siz);
-
-  if(!check(buf))
+  do
     {
       printf("Felaktig inmatning '%s'\n", buf);
-      ask_question(question, check, convert);
+      read_string(buf, buf_siz);
+      //clear_input_buffer();
     }
+  while(!check(buf));
   return convert(buf);
 }
 
@@ -48,6 +59,7 @@ bool is_shelf(char* str)
 	{
 	  return false;
 	}
+
     }
   return true;
 }
@@ -126,22 +138,32 @@ int ask_question_int(char *question)
   return answer.i; // svaret som ett heltal
 }
 
-
 int read_string(char *buf, int buf_siz)
 {
-  int i = 0;
+  int i;
   char c;
-  do
+  for(i = 0; i < buf_siz;i++)
     {
-      c = getchar(); // hämta bokstav
-      buf[i] = c;    // position 'i' i array = bokstav
-      i = i + 1;
+      if (i == buf_siz - 1)
+        {
+          clear_input_buffer();
+        }
+      else
+        {
+          c = getchar();
+          if(c != '\0' && c != '\n'  && c != EOF)
+            {
+              buf[i] = c;
+            }
+          else
+            {
+              buf[i] = '\0';
+              break;
+            }
+        }
     }
-  while (i < buf_siz - 1 && c != '\n');
-  buf[i-1] = '\0';
   return i;
 }
-
 
 char *ask_question_string(char *question)
 {
