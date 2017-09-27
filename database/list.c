@@ -8,7 +8,7 @@ struct list
   struct node* first;
   struct node* last;
 };
- 
+
 /// Change this definition and replace int with the appropriate type
 /// in your program.
 
@@ -26,7 +26,7 @@ struct node
 /// \author Tobias Wrigstad
 /// \version 1.1
 /// \date 2017-09-03
-/// \bug None known. 
+/// \bug None known.
 
 
 /// ---- TESTING -----

@@ -23,13 +23,17 @@ answer_t ask_question(char *question, check_func check, convert_func convert)
 
   printf("%s", question);
   read_string(buf, buf_siz);
-  do
+
+  if(!check(buf))
     {
-      printf("Felaktig inmatning '%s'\n", buf);
-      read_string(buf, buf_siz);
-      //clear_input_buffer();
+      do
+        {
+          printf("Felaktig inmatning '%s'\n", buf);
+          read_string(buf, buf_siz);
+        }
+      while(!check(buf));
     }
-  while(!check(buf));
+
   return convert(buf);
 }
 

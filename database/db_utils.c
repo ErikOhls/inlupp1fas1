@@ -37,9 +37,6 @@ Vä[l]j vara\n\
 [A]vbryt\n");
 }
 
-
-// --------------  Print-funktioner ----------------
-
 //////////// ================= Print functions
 ///
 /// Functions for printing items and item data
@@ -70,7 +67,7 @@ void print_amounts(void *elem, void *data)
   return;
 }
 
-// -------------- Byta hylla och antal ---------------
+// -------------- Change shelf/amount ---------------
 
 void shelf_exist(void *elem, void *exist)
 {
@@ -147,7 +144,6 @@ char ask_question_menu(void)
   char true_c;
   true_c = c[0];
   true_c = toupper(true_c);
-  printf("ask_question_menu returning: %d", true_c);
   return true_c;
 }
 
@@ -164,7 +160,7 @@ char ask_question_menu_edit(void)
 //////////// ================= MAKE ITEMS
 ///
 /// Functions for making and adding items to db
-/// TODO: Fix shelf duplicates
+///
 item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
 {
   rack_t *shlf = calloc(1, sizeof(rack_t));

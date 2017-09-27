@@ -44,21 +44,12 @@ tree_t *tree_new()
 node_t *t_node_new(K key, T elem)
 
 {
-  node_t *new_node = calloc(1, sizeof(node_t)); //allocates memory for new node pointer 
-  new_node->key = key; 
+  node_t *new_node = calloc(1, sizeof(node_t)); //allocates memory for new node pointer
+  new_node->key = key;
   new_node->elem = elem; // assigns two values of type K (***) and T (***)
   return new_node;
 }
 
-void print_specific(tree_t *tree)
-{
-  //printf("%s\n", tree->top->right->right->right->key);
-}
-/// Remove a tree along with all T elements.
-/// Note, if T is a pointer, elements will not
-/// be removed. 
-///
-/// \returns: empty tree
 void free_node(K key, T elem)
 {
   puts("in free_node");
