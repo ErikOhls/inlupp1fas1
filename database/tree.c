@@ -265,7 +265,7 @@ bool tree_has_key(tree_t *tree, K key)
 /// \param key the key of elem to be removed
 /// \returns: true if key is a key in tree
 
-/// Detta funkar i princip(tror jag). Är jox med pekare jag inte får styr på.
+
 node_t *tree_get_helper(node_t *cursor, K key, T *elem)
 {
   if(strcmp(cursor->key, key) > 0) // Vänster

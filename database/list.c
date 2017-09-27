@@ -211,7 +211,7 @@ L *list_get(list_t *list, int index)
   return &cursor->elem;
 }
 
-/// A convenience for list_get(list, 0)
+/// a convenience for list_get(list, 0)
 L *list_first(list_t *list)
 {
   L *first_e;

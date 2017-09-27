@@ -4,7 +4,7 @@
 #include <string.h>
 #include "utils.h"
 #include "list.h"
-#include "tree.h"
+#include "db_utils.h"
 
 
 
@@ -12,224 +12,10 @@
 ///
 /// Structs for items and racks
 /// TODO: Ångra
-
-
-struct rack
-{
-  char *shelf;
-  int amount;
-};
-
 typedef struct rack rack_t;
-
-struct item
-{
-  char *name;
-  char *desc;
-  int price;
-  list_t *list;
-};
-
 typedef struct item item_t;
-
-struct action
-{
-  int type; // NOTHING = 0, ADD = 1, REMOVE = 2, EDIT = 3
-  item_t *merch;
-  item_t copy;
-};
-
 typedef struct action action_t;
 
-/* ---- tmp ---- */
-
-//////////// ================= APPLY FUNCTIONS
-///
-/// Functions for use in tree_apply and list_apply
-///
-void print_tree(K key, T elem, void *data)
-{
-  printf("%s\n", (char *)key);
-}
-
-
-void print_shelfs(void *elem, void *data)
-{
-  printf("%s\n", ((rack_t *)elem)->shelf); // ((rack_t *)elem) = typdefintion
-  return;
-}
-
-void print_amounts(void *elem, void *data)
-{
-  printf("Lagerhylla: %s\nAntal: %d\n", ((rack_t *)elem)->shelf, ((rack_t *)elem)->amount);
-  return;
-}
-
-void shelf_exist(void *elem, void *exist)
-{
-  if(strcmp(((rack_t *)elem)->shelf, exist) == 0)
-    {
-      strcpy(exist, "trueeeeeeeeeeeeeeeeee");
-    }
-}
-
-void change_shelf(void *elem, void *exist)
-{
-  if(strcmp(((rack_t *)elem)->shelf, exist) == 0)
-    {
-      printf("Changing shelf: %s\n", ((rack_t *)elem)->shelf);
-      puts("--------------------------------\n");
-      ((rack_t *)elem)->shelf = ask_question_shelf("New shelf:");
-      strcpy(exist, "trueeeeeeeeeeeeeeeeee");// Detta för att vi ska veta att hyllan hittats.
-    }
-  return;
-}
-
-void change_amount(void *elem, void *exist)
-{
-  if(strcmp(((rack_t *)elem)->shelf, exist) == 0)
-    {
-      printf("Changing shelf: %s. With amount: %d\n", ((rack_t *)elem)->shelf, ((rack_t *)elem)->amount);
-      puts("--------------------------------\n");
-      ((rack_t *)elem)->amount = ask_question_int("New amount:");
-      strcpy(exist, "trueeeeeeeeeeeeeeeeee");// Detta för att vi ska veta att hyllan hittats.
-    }
-  return;
-}
-
-//////////// ================= AUX
-///
-/// Auxilary functions
-//
-bool shelf_existance(tree_t *db, char *shelf_name)
-{
-  T *elem_list = tree_elements(db);
-  for(int i = 0; i < tree_size(db); i++)
-    {
-      item_t *current = elem_list[i];
-      list_t *current_list = current->list;
-      char *shelf_tmp = strdup(shelf_name);
-      list_apply(current_list, shelf_exist, shelf_tmp);
-      if(strlen(shelf_tmp) > 10)
-        {
-          return true;
-        }
-    }
-  return false;
-}
-
-void print_item(item_t* item)
-{
-  printf("Namn: %s\n", item->name);
-  printf("Beskrivning: %s\n", item->desc);
-  printf("Pris: %d\n", item->price);
-  list_apply(item->list, print_amounts, NULL);
-}
-//////////// ================= MENU DISPLAYS
-///
-/// Displays menus
-///
-void print_menu(void)
-{
-  puts("\n[L]ägga till en vara\n\
-[T]a bort en vara\n\
-[R]edigera en vara\n\
-Ån[g]ra senaste ändringen\n\
-Lista [h]ela varukatalogen\n\
-[A]vsluta\n");
-}
-
-void print_edit()
-{
-  puts("\n[B]eskrivning\n\
-[P]ris\n\
-[L]agerhylla\n\
-An[t]al\n\
-\nVälj rad eller [a]vbryt: \n");
-}
-
-//////////// ================= ASK QUESTIONS
-///
-/// Functions for converting input to useable variables
-///
-char ask_question_list_db(void)
-{
-  char *c = ask_question("Input:", is_list_db_char, (convert_func) strdup).s;
-  char true_c;
-  true_c = c[0];
-  true_c = toupper(true_c);
-  return true_c;
-}
-
-char ask_question_menu(void)
-{
-  print_menu();
-  char *c = ask_question("Input:", is_menu_char, (convert_func) strdup).s;
-  char true_c;
-  true_c = c[0];
-  true_c = toupper(true_c);
-  return true_c;
-}
-
-char ask_question_menu_edit(void)
-{
-  print_edit();
-  char *c = ask_question("Input:", is_menu_edit_char, (convert_func) strdup).s;
-  char true_c;
-  true_c = c[0];
-  true_c = toupper(true_c);
-  return true_c;
-}
-
-//////////// ================= MAKE ITEMS
-///
-/// Functions for making and adding items to db
-/// TODO: Fix shelf duplicates
-item_t *make_item(tree_t *db, char *nm, char *dsc, int prc, char *slf, int amnt)
-{
-  rack_t *shlf = calloc(1, sizeof(rack_t));
-  shlf->shelf = slf; // TODO: Måste spara shelf någonstans, för man ska inte kunna lägga till flera varor på samma shelf
-  shlf->amount = amnt;
-
-  item_t *itm = calloc(1, sizeof(item_t));
-  itm->name = nm;
-  itm->desc = dsc;
-  itm->price = prc;
-
-  list_t *list = list_new();
-  itm->list = list;
-  list_append(itm->list, shlf);
-
-
-  if(shelf_existance(db, slf))
-    {
-      printf("Vara finns redan på hylla %s, pröva igen\n", slf);
-      itm->name = "AVBRYT";
-      return itm;
-    }
-
-  if(tree_has_key(db, itm->name))                 // Om item finns
-    {
-      item_t *existing = tree_get(db, itm->name); // Hämta item
-      // if(shelf exist)
-      //     existing amount += item amount
-      // else
-      list_append(existing->list, shlf);          // Och appenda shelf
-    }
-
-  return itm;
-}
-
-item_t *input_item(tree_t *db)
-{
-  char *name  = ask_question_string("Varans namn: ");
-  char *desc  = ask_question_string("Beskrivning av vara: ");
-  int price   = ask_question_int("Varans pris: ");
-  char *shelf = ask_question_shelf("Varans hylla: ");
-  int amount  = ask_question_int("Varans antal: ");
-
-  return make_item(db, name, desc, price, shelf, amount);
-}
 
 void add_item_to_db(tree_t *db)
 {
@@ -249,6 +35,7 @@ void add_item_to_db(tree_t *db)
       return;
     }
 }
+
 
 //////////// ================= LIST DB
 ///
@@ -272,25 +59,19 @@ void list_db(tree_t *db)
         }
       i = 1;                      // Återställ visat index
 
-      puts("\n[V]isa nästa 20 varor\n\
-Vä[l]j vara\n\
-[A]vbryt\n");
-
+      print_list_db();
+      
       char answer_id = ask_question_list_db();
       switch(answer_id)
         {
         case 'L':
-          ind = ask_question_int("Vilken vara vill du välja?: ");
-          if(page > 20)
+          do
             {
-              item_t *my_elem = tree_get(db, key_list[ind+page_ind-1]);
-              print_item(my_elem);
+            ind = ask_question_int("Vilken vara vill du välja?: ") + page_ind-1;
             }
-          else
-            {
-              item_t *my_elem = tree_get(db, key_list[ind-1]);
-              print_item(my_elem);
-}
+          while(ind >= tree_size(db));
+          item_t *my_elem = tree_get(db, key_list[ind]);
+          print_item(my_elem);
           return;
         case 'A':
           return;
@@ -331,24 +112,20 @@ item_t *choose_list_db(tree_t *db)
           position++;
         }
       i = 1;                      // Återställ visat index
-
-      puts("\n[V]isa nästa 20 varor\n\
-Vä[l]j vara\n\
-[A]vbryt\n");
-
+      
+      print_list_db();
+      
       char answer_id = ask_question_list_db();
       switch(answer_id)
         {
         case 'L':
-          ind = ask_question_int("Vilken vara vill du välja?: ");
-          if(page > 20)
+          do
             {
-              return tree_get(db, key_list[ind+page_ind-1]);
+              ind = ask_question_int("Vilken vara vill du välja?: ") + page_ind-1;
             }
-          else
-            {
-              return tree_get(db, key_list[ind-1]);
-            }
+          while(ind >= tree_size(db));
+          return tree_get(db, key_list[ind]);
+           
         case 'A':
           return false_item;
         case 'V':
@@ -364,87 +141,12 @@ Vä[l]j vara\n\
   return false_item;
 }
 
-//////////// ================= EDIT ITEM
-///
-/// function to edit various values of items.
-///
-void edit_desc(tree_t *db, item_t *item)
-{
-  printf("Nuvarande beskrivning: %s\n", item->desc);
-  puts("--------------------------------\n");
-  item->desc = ask_question_string("Ny beskrivning: ");
-  puts("Uppdaterad vara:\n");
-  print_item(item);
-  return;
-}
-
-void edit_price(tree_t *db, item_t *item)
-{
-  printf("Nuvarande pris: %d\n", item->price);
-  puts("--------------------------------\n");
-  item->price = ask_question_int("Nytt pris: ");
-  puts("Uppdaterad vara:\n");
-  print_item(item);
-  return;
-}
-
-void edit_shelf(tree_t *db, item_t *item)
-{
-  puts("Nuvarande hyllor: ");
-  list_apply(item->list, print_shelfs, NULL); // Prints shelfs
-  puts("--------------------------------\n");
-  bool has_shelf = true;
-  while(has_shelf)
-    {
-      char *shelf_edit = ask_question_string("Vilken hylla vill du ändra?(case sensitive)");
-      list_apply(item->list, change_shelf, shelf_edit); // Ändrar shelf, om den finns.
-      if(strlen(shelf_edit) > 10) // change_shelf ändrar shelf edit till lång sträng.
-        {
-          has_shelf = false;
-        }
-    }
-  puts("Uppdaterad vara:\n");
-  print_item(item);
-  return;
-}
-
-void edit_amount(tree_t *db, item_t *item)
-{
-  puts("Nuvarande hyllor och antal: ");
-  list_apply(item->list, print_amounts, NULL);
-  puts("--------------------------------\n");
-  bool has_shelf = true;
-  while(has_shelf)
-    {
-      char *shelf_edit = ask_question_string("Vilken hylla vill du ändra?(case sensitive): ");
-      list_apply(item->list, change_amount, shelf_edit);
-      if(strlen(shelf_edit) > 10) // change_shelf ändrar shelf edit till lång sträng.
-        {
-          has_shelf = false;
-        }
-    }
-  puts("Uppdaterad vara:\n");
-  print_item(item);
-  return;
-}
-//////////// ================= REMOVE ITEM
-///
-/// TODO: Inlupp 2
-///
-void remove_item_from_db(tree_t *db)
-{
-  // TODO: Först i inlupp 2.
-  return;
-}
-
-
-void event_loop_edit(tree_t *db, action_t *undo)
 
 //////////// ================= EVENT LOOPS
 ///
 /// Handles menus
 ///
-
+void event_loop_edit(tree_t *db, action_t *undo)
 {
   bool quit_v = true;
   item_t *chosen_item = choose_list_db(db);
@@ -580,7 +282,6 @@ int main(int argc, char *argv[])
   tree_insert(db, "test 19", make_item(db, "test 19", "dsc3", 1000, "J10", 100));
   tree_insert(db, "test 20", make_item(db, "test 20", "dsc3", 1000, "K10", 100));
 
-  //tree_apply(db, inorder, print_tree, NULL);
   event_loop(db);
   return 0;
 }
