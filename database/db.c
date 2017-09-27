@@ -112,9 +112,9 @@ item_t *choose_list_db(tree_t *db)
           position++;
         }
       i = 1;                      // Återställ visat index
-      
+
       print_list_db();
-      
+
       char answer_id = ask_question_list_db();
       switch(answer_id)
         {
@@ -122,10 +122,12 @@ item_t *choose_list_db(tree_t *db)
           do
             {
               ind = ask_question_int("Vilken vara vill du välja?: ") + page_ind-1;
+              puts("printing number");
+              printf("%d", ind);
             }
           while(ind >= tree_size(db));
           return tree_get(db, key_list[ind]);
-           
+
         case 'A':
           return false_item;
         case 'V':

@@ -12,9 +12,8 @@ answer_t ask_question(char *question, check_func check, convert_func convert)
   char buf[buf_siz];
 
   printf("%s", question);
-  //scanf("%s", buf);
   read_string(buf, buf_siz);
-  
+
   if(!check(buf))
     {
       printf("Felaktig inmatning '%s'\n", buf);
@@ -25,6 +24,10 @@ answer_t ask_question(char *question, check_func check, convert_func convert)
 
 bool is_number(char *str)
 {
+  if(strlen(str) == 0)
+    {
+      return false;
+    }
   for(unsigned int i = 0; i < strlen(str); i = i + 1)
     {
       if(isdigit(str[i]) == false)
